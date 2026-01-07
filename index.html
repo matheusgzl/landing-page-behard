@@ -1,61 +1,85 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeHard - Transforme sua Vida</title>
-    <link rel="stylesheet" href="estilo/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BeHard | Transforme seus hábitos</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Configuration & Styles -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#FFBE00',
+              'primary-hover': '#E5AB00',
+              dark: '#310055',
+            },
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+            },
+            backgroundImage: {
+              'brand-gradient': 'linear-gradient(135deg, #310055 0%, #3C0663 20%, #4A0A77 40%, #5A108F 60%, #6818A5 80%, #6D31A3 100%)',
+            },
+            keyframes: {
+              bounceIn: {
+                '0%': { transform: 'scale(0.8)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              }
+            },
+            animation: {
+              bounceIn: 'bounceIn 0.5s ease-out',
+            }
+          }
+        }
+      }
+    </script>
+    
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: #310055;
+        scroll-behavior: smooth;
+      }
+      .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+      }
+      /* Hide scrollbar for cleaner look if needed */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #310055;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #4A0A77; 
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #FFBE00; 
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+      }
+    }
+    </script>
 </head>
-<body>
-    <div id="overlay-blur" class="overlay"></div>
-
-    <header>
-        <nav class="navbar">
-            <div class="logo">BeHard</div>
-            <div class="menu-toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#sobre">Sobre</a></li>
-                <li><a href="#beneficios">Benefícios</a></li>
-                <li><a href="#contato" class="btn-yellow">Começar Agora</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <section id="home" class="hero reveal">
-            <div class="hero-content">
-                <h1>Supere seus limites, <span class="text-yellow">viva o extraordinário.</span></h1>
-                <p>O BeHard é o seu parceiro definitivo em saúde e educação física. Treinos personalizados e nutrição de verdade na palma da sua mão.</p>
-                <div class="cta-group">
-                    <a href="#beneficios" class="btn-yellow">Quero Mudar de Vida</a>
-                </div>
-            </div>
-        </section>
-
-        <section id="sobre" class="features grid-container">
-            <div class="feature-card reveal">
-                <div class="icon">🥗</div>
-                <h3>Alimentação Saudável</h3>
-                <p>Planos alimentares feitos por especialistas para potencializar seus resultados.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="icon">💪</div>
-                <h3>Atividade Física</h3>
-                <p>Treinos adaptados ao seu nível, do iniciante ao avançado, onde você estiver.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="icon">🔥</div>
-                <h3>Foco Total</h3>
-                <p>Acompanhamento de progresso e gamificação para manter você sempre motivado.</p>
-            </div>
-        </section>
-    </main>
-
-    <script src="script.js"></script>
+<body class="bg-brand-gradient text-white overflow-x-hidden relative min-h-screen">
+    <div id="root"></div>
 </body>
 </html>

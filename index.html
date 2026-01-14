@@ -124,7 +124,7 @@
         z-index: 0;
       }
 
-      /* Muscle Group SVG Styles */
+      /* Muscle Group SVG Styles - UPDATED */
       .muscle-group {
         transition: all 0.3s ease;
         cursor: pointer;
@@ -133,11 +133,47 @@
         stroke-width: 1;
       }
       
-      .muscle-group:hover, .muscle-group.active {
-        fill: rgba(242, 183, 5, 0.3); /* Yellow Tint */
+      /* Subtle Hover Glow */
+      .muscle-group:hover {
+        fill: rgba(242, 183, 5, 0.4); /* Sutil Yellow Tint */
         stroke: #F2B705;
         stroke-width: 2;
-        filter: drop-shadow(0 0 8px rgba(242, 183, 5, 0.5));
+        filter: drop-shadow(0 0 5px rgba(242, 183, 5, 0.5));
+      }
+
+      /* Intense Active Click Glow */
+      .muscle-group.active {
+        fill: #F2B705; /* Solid Yellow */
+        stroke: #FFFFFF;
+        stroke-width: 2;
+        filter: drop-shadow(0 0 15px rgba(242, 183, 5, 0.9));
+      }
+
+      /* Body Tooltip Style */
+      #body-tooltip {
+        position: fixed;
+        background: rgba(0, 0, 0, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        pointer-events: none;
+        opacity: 0;
+        transform: translate(-50%, -100%);
+        transition: opacity 0.2s ease, transform 0.1s ease;
+        z-index: 100;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        margin-top: -15px;
+        white-space: nowrap;
+      }
+
+      #body-tooltip strong {
+        display: block;
+        color: #F2B705;
+        font-size: 0.95rem;
+        margin-bottom: 2px;
       }
 
       /* Progress Bar Styles */
@@ -222,7 +258,7 @@
 
     <!-- Navbar -->
     <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent py-6">
-        <div class="container mx-auto px-4 md:px-8 flex justify-between items-center">
+        <div class="container mx-auto px-4 md:px-8 flex justify-between items-center relative">
             <!-- Logo -->
             <a href="#home" class="nav-link text-2xl font-bold text-white tracking-wider z-50">
                 BE<span class="text-behard-yellow">HARD</span>
@@ -241,23 +277,30 @@
             </div>
 
             <!-- Mobile Toggle -->
-            <button id="mobile-menu-btn" class="md:hidden text-white z-50 hover:text-behard-yellow transition-colors" aria-label="Toggle menu">
-                <i data-lucide="menu" id="menu-icon" class="w-7 h-7"></i>
+            <!-- Added relative and z-50 to ensure it stays on top of the fixed menu overlay -->
+            <button id="mobile-menu-btn" class="md:hidden text-white relative z-50 hover:text-behard-yellow transition-colors flex items-center justify-center" aria-label="Toggle menu">
+                <div id="icon-menu" class="block">
+                  <i data-lucide="menu" class="w-7 h-7"></i>
+                </div>
+                <div id="icon-close" class="hidden">
+                  <i data-lucide="x" class="w-7 h-7"></i>
+                </div>
             </button>
         </div>
-
-        <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu" class="fixed inset-0 bg-behard-dark/95 backdrop-blur-xl flex flex-col justify-center items-center gap-8 transition-all duration-300 opacity-0 invisible pointer-events-none">
-            <a href="#home" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Home</a>
-            <a href="#features" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Diferenciais</a>
-            <a href="#origin-story" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Origem</a>
-            <a href="#how-it-works" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Metodologia</a>
-            <a href="#gallery" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Equipe</a>
-            <a href="#motivation" class="mobile-link ripple-btn px-8 py-4 rounded-full bg-behard-yellow text-behard-dark font-bold text-lg hover:bg-white transition-all shadow-lg">
-                Acessar App
-            </a>
-        </div>
     </nav>
+
+    <!-- Mobile Menu Overlay (Moved outside Nav) -->
+    <!-- z-40 ensures it's below the nav (z-50) but covers page content. -->
+    <div id="mobile-menu" class="fixed inset-0 bg-behard-dark/95 backdrop-blur-xl z-40 flex flex-col justify-center items-center gap-8 transition-all duration-300 opacity-0 invisible pointer-events-none overflow-y-auto">
+        <a href="#home" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Home</a>
+        <a href="#features" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Diferenciais</a>
+        <a href="#origin-story" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Origem</a>
+        <a href="#how-it-works" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Metodologia</a>
+        <a href="#gallery" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Equipe</a>
+        <a href="#motivation" class="mobile-link ripple-btn px-8 py-4 rounded-full bg-behard-yellow text-behard-dark font-bold text-lg hover:bg-white transition-all shadow-lg">
+            Acessar App
+        </a>
+    </div>
 
     <!-- Main Content -->
     <main class="w-full text-behard-light overflow-x-hidden">
@@ -316,41 +359,65 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Card 1 -->
-                    <div class="reveal h-full" style="transition-delay: 100ms;">
-                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center">
-                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-6">
+                    <div class="reveal h-full group" style="transition-delay: 100ms;">
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center relative overflow-hidden">
+                            <!-- Image Placeholder -->
+                            <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5">
+                                <img src="https://picsum.photos/400/250?random=50&grayscale" alt="Treino Individual" class="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem do App/Treino</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
                                 <div class="text-behard-yellow">
-                                    <i data-lucide="activity" class="w-10 h-10"></i>
+                                    <i data-lucide="activity" class="w-8 h-8"></i>
                                 </div>
                             </div>
                             <h3 class="text-xl font-bold text-white mb-3">Treino Individualizado</h3>
-                            <p class="text-behard-light/80 leading-relaxed">Prescrição ajustada dinamicamente à sua capacidade de recuperação fisiológica. Volume e intensidade calibrados para respeitar sua individualidade biológica.</p>
+                            <p class="text-behard-light/80 leading-relaxed text-sm">Prescrição ajustada dinamicamente à sua capacidade de recuperação fisiológica e individualidade biológica.</p>
                         </div>
                     </div>
 
                     <!-- Card 2: Metodologia Eficaz -->
-                    <div class="reveal h-full" style="transition-delay: 200ms;">
-                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center">
-                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-6">
+                    <div class="reveal h-full group" style="transition-delay: 200ms;">
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center relative overflow-hidden">
+                            <!-- Image Placeholder -->
+                            <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5">
+                                <img src="https://picsum.photos/400/250?random=51&grayscale" alt="Metodologia" class="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Metodologia</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
                                 <div class="text-behard-yellow">
-                                    <i data-lucide="clipboard-check" class="w-10 h-10"></i>
+                                    <i data-lucide="clipboard-check" class="w-8 h-8"></i>
                                 </div>
                             </div>
                             <h3 class="text-xl font-bold text-white mb-3">Metodologia Eficaz</h3>
-                            <p class="text-behard-light/80 leading-relaxed">Processo estruturado focado em organização. Desenvolva constância através da consolidação de hábitos sustentáveis.</p>
+                            <p class="text-behard-light/80 leading-relaxed text-sm">Processo estruturado focado em organização. Desenvolva constância através de hábitos sustentáveis.</p>
                         </div>
                     </div>
 
                     <!-- Card 3 -->
-                    <div class="reveal h-full" style="transition-delay: 300ms;">
-                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center">
-                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-6">
+                    <div class="reveal h-full group" style="transition-delay: 300ms;">
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center relative overflow-hidden">
+                            <!-- Image Placeholder -->
+                            <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5">
+                                <img src="https://picsum.photos/400/250?random=52&grayscale" alt="Suporte" class="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Suporte</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
                                 <div class="text-behard-yellow">
-                                    <i data-lucide="users" class="w-10 h-10"></i>
+                                    <i data-lucide="users" class="w-8 h-8"></i>
                                 </div>
                             </div>
                             <h3 class="text-xl font-bold text-white mb-3">Suporte Profissional</h3>
-                            <p class="text-behard-light/80 leading-relaxed">Acesso a corpo técnico especializado para ajustes de treino, correção biomecânica e orientação assertiva.</p>
+                            <p class="text-behard-light/80 leading-relaxed text-sm">Acesso a corpo técnico especializado para ajustes de treino, correção biomecânica e orientação.</p>
                         </div>
                     </div>
                 </div>
@@ -459,52 +526,92 @@
                     
                     <!-- Item 1: O Problema -->
                     <div class="reveal group h-full">
-                        <div class="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 mb-6 group-hover:scale-110 group-hover:text-behard-yellow transition-all duration-300 shadow-lg">
-                                <i data-lucide="cloud-fog" class="w-7 h-7"></i>
+                        <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col">
+                            <!-- Placeholder Image for Card -->
+                            <div class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5">
+                                 <img src="https://picsum.photos/500/300?random=100&grayscale" alt="O Problema" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Problema</span>
+                                </div>
                             </div>
-                            <h3 class="text-2xl font-bold text-white mb-4">O Problema: Ruído</h3>
-                            <p class="text-behard-light/70 leading-relaxed text-lg">
-                                Identificamos um padrão recorrente: pessoas motivadas desistindo devido à falta de clareza. O excesso de informações contraditórias e treinos genéricos gerava ansiedade, paralisia por análise e falta de direção concreta.
+
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 group-hover:text-behard-yellow transition-colors duration-300">
+                                    <i data-lucide="cloud-fog" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white">O Problema: Ruído</h3>
+                            </div>
+                            <p class="text-behard-light/70 leading-relaxed text-base">
+                                Identificamos um padrão recorrente: pessoas motivadas desistindo devido à falta de clareza. O excesso de informações contraditórias gera ansiedade e falta de direção.
                             </p>
                         </div>
                     </div>
 
                     <!-- Item 2: O Diagnóstico -->
                     <div class="reveal group h-full" style="transition-delay: 150ms;">
-                        <div class="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden">
-                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 mb-6 group-hover:scale-110 group-hover:text-behard-yellow transition-all duration-300 shadow-lg">
-                                 <i data-lucide="eye" class="w-7 h-7"></i>
+                        <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col">
+                            <!-- Placeholder Image for Card -->
+                            <div class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5">
+                                 <img src="https://picsum.photos/500/300?random=101&grayscale" alt="O Diagnóstico" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Diagnóstico</span>
+                                </div>
+                            </div>
+
+                             <div class="flex items-center gap-4 mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 group-hover:text-behard-yellow transition-colors duration-300">
+                                     <i data-lucide="eye" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white">O Diagnóstico</h3>
                              </div>
-                            <h3 class="text-2xl font-bold text-white mb-4">O Diagnóstico</h3>
-                            <p class="text-behard-light/70 leading-relaxed text-lg">
-                                A falha geralmente não está na falta de vontade, mas na ausência de estrutura. Sem um plano adaptável à realidade caótica do dia a dia (estudos, trabalho, família), qualquer rotina se torna frágil diante do primeiro imprevisto.
+                            <p class="text-behard-light/70 leading-relaxed text-base">
+                                A falha geralmente não está na falta de vontade, mas na ausência de estrutura. Sem um plano adaptável, qualquer rotina se torna frágil diante de imprevistos.
                             </p>
                         </div>
                     </div>
 
                     <!-- Item 3: O Propósito -->
                     <div class="reveal group h-full" style="transition-delay: 300ms;">
-                         <div class="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden">
-                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 mb-6 group-hover:scale-110 group-hover:text-behard-yellow transition-all duration-300 shadow-lg">
-                                 <i data-lucide="target" class="w-7 h-7"></i>
+                         <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col">
+                            <!-- Placeholder Image for Card -->
+                            <div class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5">
+                                 <img src="https://picsum.photos/500/300?random=102&grayscale" alt="O Propósito" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Propósito</span>
+                                </div>
+                            </div>
+
+                             <div class="flex items-center gap-4 mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 group-hover:text-behard-yellow transition-colors duration-300">
+                                     <i data-lucide="target" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white">O Propósito BeHard</h3>
                              </div>
-                            <h3 class="text-2xl font-bold text-white mb-4">O Propósito BeHard</h3>
-                            <p class="text-behard-light/70 leading-relaxed text-lg">
-                                Desenvolvemos uma abordagem focada puramente em eficiência. O BeHard conecta a ciência esportiva de alto nível à rotina de quem trabalha e estuda, removendo a fricção e tornando a manutenção da saúde viável.
+                            <p class="text-behard-light/70 leading-relaxed text-base">
+                                Desenvolvemos uma abordagem focada em eficiência. Conectamos a ciência esportiva à rotina de quem trabalha e estuda, tornando a manutenção da saúde viável.
                             </p>
                         </div>
                     </div>
 
                     <!-- Item 4: A Execução -->
                     <div class="reveal group h-full" style="transition-delay: 450ms;">
-                         <div class="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden">
-                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 mb-6 group-hover:scale-110 group-hover:text-behard-yellow transition-all duration-300 shadow-lg">
-                                 <i data-lucide="brain-circuit" class="w-7 h-7"></i>
+                         <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col">
+                            <!-- Placeholder Image for Card -->
+                            <div class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5">
+                                 <img src="https://picsum.photos/500/300?random=103&grayscale" alt="A Execução" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem App</span>
+                                </div>
+                            </div>
+
+                             <div class="flex items-center gap-4 mb-4">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 group-hover:text-behard-yellow transition-colors duration-300">
+                                     <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white">Ecossistema de Hábitos</h3>
                              </div>
-                            <h3 class="text-2xl font-bold text-white mb-4">Ecossistema de Hábitos</h3>
-                            <p class="text-behard-light/70 leading-relaxed text-lg">
-                                Mais que um app de treinos, criamos uma ferramenta de gestão de estilo de vida. A tecnologia monitora variáveis e adapta o planejamento automaticamente para garantir a aderência a longo prazo, não apenas por 30 dias.
+                            <p class="text-behard-light/70 leading-relaxed text-base">
+                                Mais que um app de treinos, criamos uma ferramenta de gestão de estilo de vida. A tecnologia adapta o planejamento para garantir a aderência a longo prazo.
                             </p>
                         </div>
                     </div>
@@ -530,6 +637,12 @@
                          <!-- Glow background -->
                          <div class="absolute inset-0 bg-behard-yellow/5 blur-3xl rounded-full"></div>
                          
+                         <!-- Tooltip Element -->
+                         <div id="body-tooltip">
+                             <strong id="tooltip-title">Titulo</strong>
+                             <span id="tooltip-desc">Descrição curta</span>
+                         </div>
+
                          <svg width="300" height="500" viewBox="0 0 300 500" class="drop-shadow-2xl z-10 animate-float" xmlns="http://www.w3.org/2000/svg">
                             <!-- Body Outline (Base) -->
                             <path d="M150 60 C130 60 115 75 115 95 C115 115 130 130 150 130 C170 130 185 115 185 95 C185 75 170 60 150 60 Z" class="muscle-group" id="zone-head" />
@@ -747,381 +860,24 @@
             </div>
         </section>
 
-        <!-- How It Works Section -->
-        <section id="how-it-works" class="py-20 px-4 md:px-8">
-            <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <div class="reveal">
-                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-8">
-                            A Jornada <br/><span class="text-behard-yellow">BeHard</span>
-                        </h2>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <!-- Step 1 -->
-                        <div class="reveal" style="transition-delay: 0ms;">
-                            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-12 relative">
-                                <div class="hidden md:block absolute left-[27px] top-16 bottom-[-48px] w-0.5 bg-white/10"></div>
-                                <div class="flex-shrink-0 w-14 h-14 rounded-full bg-behard-yellow flex items-center justify-center text-behard-dark font-bold text-2xl shadow-lg z-10">1</div>
-                                <div class="text-center md:text-left">
-                                    <h3 class="text-2xl font-bold text-white mb-2">Definição de Metas</h3>
-                                    <p class="text-behard-light/80 text-lg">Estabelecemos objetivos claros: Hipertrofia, Redução de Gordura ou Performance.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 2 -->
-                        <div class="reveal" style="transition-delay: 150ms;">
-                            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-12 relative">
-                                <div class="hidden md:block absolute left-[27px] top-16 bottom-[-48px] w-0.5 bg-white/10"></div>
-                                <div class="flex-shrink-0 w-14 h-14 rounded-full bg-behard-yellow flex items-center justify-center text-behard-dark font-bold text-2xl shadow-lg z-10">2</div>
-                                <div class="text-center md:text-left">
-                                    <h3 class="text-2xl font-bold text-white mb-2">Estruturação da Rotina</h3>
-                                    <p class="text-behard-light/80 text-lg">O sistema gera uma periodização compatível com sua disponibilidade real.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 3 -->
-                        <div class="reveal" style="transition-delay: 300ms;">
-                            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-12 relative">
-                                <div class="hidden md:block absolute left-[27px] top-16 bottom-[-48px] w-0.5 bg-white/10"></div>
-                                <div class="flex-shrink-0 w-14 h-14 rounded-full bg-behard-yellow flex items-center justify-center text-behard-dark font-bold text-2xl shadow-lg z-10">3</div>
-                                <div class="text-center md:text-left">
-                                    <h3 class="text-2xl font-bold text-white mb-2">Monitoramento</h3>
-                                    <p class="text-behard-light/80 text-lg">Registro simplificado de treinos e alimentação para controle de variáveis.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 4 -->
-                        <div class="reveal" style="transition-delay: 450ms;">
-                            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 relative">
-                                <div class="flex-shrink-0 w-14 h-14 rounded-full bg-behard-yellow flex items-center justify-center text-behard-dark font-bold text-2xl shadow-lg z-10">4</div>
-                                <div class="text-center md:text-left">
-                                    <h3 class="text-2xl font-bold text-white mb-2">Análise de Dados</h3>
-                                    <p class="text-behard-light/80 text-lg">Acompanhamento métrico de progressão de carga e composição corporal.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative flex justify-center items-center">
-                    <div class="reveal" style="transition-delay: 300ms;">
-                        <!-- Phone Mockup Container -->
-                        <div class="relative w-[300px] h-[600px] bg-behard-dark border-[12px] border-gray-800 rounded-[3rem] shadow-2xl overflow-hidden flex flex-col z-10">
-                            <!-- Notch/Top Bar -->
-                            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-800 rounded-b-xl z-30"></div>
-                            
-                            <!-- Screen Background -->
-                            <div class="relative w-full h-full bg-gradient-to-br from-behard-dark to-purple-900">
-                                
-                                <!-- SCREEN 1: TREINOS (Active Default) -->
-                                <div class="phone-screen active absolute inset-0 flex flex-col p-5 pt-12" id="screen-1">
-                                    <div class="flex items-center justify-between mb-6">
-                                        <div>
-                                            <h3 class="text-white font-bold text-xl">Olá, Atleta</h3>
-                                            <p class="text-white/60 text-xs">Treino A: Peito & Tríceps</p>
-                                        </div>
-                                        <div class="w-10 h-10 rounded-full bg-behard-yellow flex items-center justify-center text-behard-dark font-bold">
-                                            <i data-lucide="user" class="w-5 h-5"></i>
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-3 flex-1">
-                                        <div class="bg-white/10 p-4 rounded-xl flex items-center gap-4 hover:bg-white/20 transition-colors cursor-pointer border-l-4 border-behard-yellow">
-                                            <div class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow">
-                                                <i data-lucide="dumbbell" class="w-6 h-6"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold text-white text-sm">Supino Reto</h4>
-                                                <p class="text-xs text-white/60">4 séries x 10 reps @ 70% 1RM</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="bg-white/10 p-4 rounded-xl flex items-center gap-4 hover:bg-white/20 transition-colors cursor-pointer border-l-4 border-transparent">
-                                            <div class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow">
-                                                <i data-lucide="activity" class="w-6 h-6"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold text-white text-sm">Crucifixo</h4>
-                                                <p class="text-xs text-white/60">3 séries x 12 reps (Falha Concêntrica)</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="bg-white/10 p-4 rounded-xl flex items-center gap-4 hover:bg-white/20 transition-colors cursor-pointer border-l-4 border-transparent">
-                                            <div class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow">
-                                                <i data-lucide="zap" class="w-6 h-6"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold text-white text-sm">Tríceps Corda</h4>
-                                                <p class="text-xs text-white/60">4 séries x 12 reps</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <button class="w-full py-3 bg-behard-yellow text-behard-dark font-bold rounded-xl mt-4 shadow-lg text-sm">
-                                        Iniciar Sessão
-                                    </button>
-                                </div>
-
-                                <!-- SCREEN 2: NUTRIÇÃO (Updated to Rotina) -->
-                                <div class="phone-screen inactive absolute inset-0 flex flex-col p-5 pt-12" id="screen-2">
-                                    <div class="flex items-center justify-between mb-6">
-                                        <div>
-                                            <h3 class="text-white font-bold text-xl">Checklist</h3>
-                                            <p class="text-white/60 text-xs">Aderência Semanal: 92%</p>
-                                        </div>
-                                        <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
-                                            <i data-lucide="list-todo" class="w-5 h-5"></i>
-                                        </div>
-                                    </div>
-
-                                    <!-- Macro Summary (Updated to Routine Stats) -->
-                                    <div class="flex gap-2 mb-6">
-                                        <div class="flex-1 bg-white/10 p-2 rounded-lg text-center">
-                                            <p class="text-[10px] text-white/60 uppercase">Foco</p>
-                                            <p class="text-sm font-bold text-behard-yellow">Alto</p>
-                                        </div>
-                                        <div class="flex-1 bg-white/10 p-2 rounded-lg text-center">
-                                            <p class="text-[10px] text-white/60 uppercase">Hábitos</p>
-                                            <p class="text-sm font-bold text-behard-yellow">4/5</p>
-                                        </div>
-                                        <div class="flex-1 bg-white/10 p-2 rounded-lg text-center">
-                                            <p class="text-[10px] text-white/60 uppercase">Sono</p>
-                                            <p class="text-sm font-bold text-behard-yellow">7h</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-3 flex-1">
-                                        <div class="bg-white/5 p-3 rounded-xl border-l-2 border-green-500">
-                                            <div class="flex justify-between items-center mb-1">
-                                                <h4 class="font-bold text-white text-sm">Hidratação</h4>
-                                                <span class="text-xs text-green-400">OK</span>
-                                            </div>
-                                            <p class="text-xs text-white/60">Meta: 3.5L (Atingida)</p>
-                                        </div>
-
-                                        <div class="bg-white/5 p-3 rounded-xl border-l-2 border-green-500">
-                                            <div class="flex justify-between items-center mb-1">
-                                                <h4 class="font-bold text-white text-sm">Refeições</h4>
-                                                <span class="text-xs text-green-400">OK</span>
-                                            </div>
-                                            <p class="text-xs text-white/60">Macros ajustados</p>
-                                        </div>
-
-                                        <div class="bg-white/5 p-3 rounded-xl border-l-2 border-gray-600 opacity-60">
-                                            <div class="flex justify-between items-center mb-1">
-                                                <h4 class="font-bold text-white text-sm">Mobilidade</h4>
-                                                <span class="text-xs text-white/40">Pendente</span>
-                                            </div>
-                                            <p class="text-xs text-white/60">Sessão noturna</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <button class="w-full py-3 bg-white/10 text-white font-bold rounded-xl mt-4 border border-white/20 text-sm">
-                                        Atualizar Métricas
-                                    </button>
-                                </div>
-
-                                <!-- SCREEN 3: PROGRESSO -->
-                                <div class="phone-screen inactive absolute inset-0 flex flex-col p-5 pt-12" id="screen-3">
-                                    <div class="flex items-center justify-between mb-6">
-                                        <div>
-                                            <h3 class="text-white font-bold text-xl">Monitoramento</h3>
-                                            <p class="text-white/60 text-xs">Ciclo Atual</p>
-                                        </div>
-                                        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                                            <i data-lucide="trending-up" class="w-5 h-5"></i>
-                                        </div>
-                                    </div>
-
-                                    <!-- Chart Mockup -->
-                                    <div class="h-40 bg-white/5 rounded-xl p-4 flex items-end justify-between gap-2 mb-6 border border-white/10">
-                                        <div class="w-full bg-blue-500/20 rounded-t-sm h-[40%] relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">S1</div></div>
-                                        <div class="w-full bg-blue-500/40 rounded-t-sm h-[55%] relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">S2</div></div>
-                                        <div class="w-full bg-blue-500/60 rounded-t-sm h-[50%] relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">S3</div></div>
-                                        <div class="w-full bg-blue-500/80 rounded-t-sm h-[70%] relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">S4</div></div>
-                                        <div class="w-full bg-behard-yellow rounded-t-sm h-[85%] relative shadow-[0_0_10px_rgba(242,183,5,0.5)] group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-behard-yellow opacity-100">Atual</div></div>
-                                    </div>
-
-                                    <div class="space-y-3 flex-1">
-                                        <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl">
-                                            <div class="flex items-center gap-3">
-                                                <div class="bg-blue-500/20 p-2 rounded-lg text-blue-400"><i data-lucide="scale" class="w-5 h-5"></i></div>
-                                                <span class="text-sm font-medium">Peso Corporal</span>
-                                            </div>
-                                            <span class="text-green-400 font-bold text-sm">Estável</span>
-                                        </div>
-                                        
-                                        <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl">
-                                            <div class="flex items-center gap-3">
-                                                <div class="bg-purple-500/20 p-2 rounded-lg text-purple-400"><i data-lucide="percent" class="w-5 h-5"></i></div>
-                                                <span class="text-sm font-medium">Composição</span>
-                                            </div>
-                                            <span class="text-green-400 font-bold text-sm">Evoluindo</span>
-                                        </div>
-
-                                        <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl">
-                                            <div class="flex items-center gap-3">
-                                                <div class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow"><i data-lucide="biceps-flexed" class="w-5 h-5"></i></div>
-                                                <span class="text-sm font-medium">Força Relativa</span>
-                                            </div>
-                                            <span class="text-green-400 font-bold text-sm">Aumentando</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Navigation dots -->
-                                <div class="absolute bottom-4 left-0 w-full flex justify-center gap-2 z-20">
-                                    <div class="w-2 h-2 rounded-full bg-white screen-dot opacity-100"></div>
-                                    <div class="w-2 h-2 rounded-full bg-white screen-dot opacity-40"></div>
-                                    <div class="w-2 h-2 rounded-full bg-white screen-dot opacity-40"></div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Comparison Section (VS) -->
-        <section class="py-24 px-4 md:px-8 bg-black/40 relative overflow-hidden">
-            <!-- Background Elements -->
-            <div class="absolute left-0 top-0 w-64 h-64 bg-red-500/5 blur-[100px] rounded-full pointer-events-none"></div>
-            <div class="absolute right-0 bottom-0 w-64 h-64 bg-behard-yellow/5 blur-[100px] rounded-full pointer-events-none"></div>
-
-            <div class="container mx-auto max-w-5xl">
-                <div class="reveal text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                        Comparativo de <span class="text-behard-yellow">Eficácia</span>
-                    </h2>
-                    <p class="text-behard-light/70 max-w-xl mx-auto">
-                        Entenda a diferença técnica entre abordagens genéricas e a metodologia estruturada BeHard.
-                    </p>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-8 relative">
-                    
-                    <!-- VS Badge (Desktop Center / Mobile Top) -->
-                    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:flex w-16 h-16 bg-behard-dark border-4 border-white/10 rounded-full items-center justify-center shadow-xl">
-                        <span class="font-black text-xl italic text-white">VS</span>
-                    </div>
-
-                    <!-- WITHOUT BeHard -->
-                    <div class="reveal" style="transition-delay: 100ms;">
-                        <div class="bg-[#1A1A1A]/80 backdrop-blur-sm border border-white/5 rounded-3xl p-8 h-full relative overflow-hidden group hover:border-red-500/30 transition-colors duration-300">
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-900 to-transparent"></div>
-                            
-                            <h3 class="text-2xl font-bold text-gray-400 mb-8 flex items-center gap-3">
-                                <span class="w-2 h-2 rounded-full bg-gray-500"></span>
-                                Abordagem Comum
-                            </h3>
-
-                            <ul class="space-y-6">
-                                <li class="flex items-start gap-4 opacity-60">
-                                    <div class="bg-red-500/10 p-1 rounded text-red-500 mt-1">
-                                        <i data-lucide="x" class="w-4 h-4"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-gray-300">Falta de Periodização</strong>
-                                        <span class="text-sm">Treinos aleatórios sem progressão de carga estruturada.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4 opacity-60">
-                                    <div class="bg-red-500/10 p-1 rounded text-red-500 mt-1">
-                                        <i data-lucide="x" class="w-4 h-4"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-gray-300">Restrição Insustentável</strong>
-                                        <span class="text-sm">Planos alimentares rígidos que geram efeito rebote.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4 opacity-60">
-                                    <div class="bg-red-500/10 p-1 rounded text-red-500 mt-1">
-                                        <i data-lucide="x" class="w-4 h-4"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-gray-300">Estagnação de Performance</strong>
-                                        <span class="text-sm">Ausência de estímulos variados levando ao platô.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4 opacity-60">
-                                    <div class="bg-red-500/10 p-1 rounded text-red-500 mt-1">
-                                        <i data-lucide="x" class="w-4 h-4"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-gray-300">Inconsistência</strong>
-                                        <span class="text-sm">Dependência exclusiva de motivação momentânea.</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- WITH BeHard -->
-                    <div class="reveal" style="transition-delay: 300ms;">
-                        <div class="bg-gradient-to-b from-[#3C0663] to-[#1A002E] border border-behard-yellow/50 rounded-3xl p-8 h-full relative overflow-hidden shadow-[0_0_40px_rgba(242,183,5,0.15)] transform md:scale-105 z-10">
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-behard-yellow to-transparent"></div>
-                            
-                            <h3 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                                <span class="w-2 h-2 rounded-full bg-behard-yellow animate-pulse"></span>
-                                Metodologia BeHard
-                            </h3>
-
-                            <ul class="space-y-6">
-                                <li class="flex items-start gap-4">
-                                    <div class="bg-behard-yellow/20 p-1 rounded text-behard-yellow mt-1">
-                                        <i data-lucide="check" class="w-4 h-4"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-white">Periodização Científica</strong>
-                                        <span class="text-sm text-behard-light/80">Ciclos de treino ajustados para máxima adaptação fisiológica.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4">
-                                    <div class="bg-behard-yellow/20 p-1 rounded text-behard-yellow mt-1">
-                                        <i data-lucide="check" class="w-4 h-4"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-white">Flexibilidade Metabólica</strong>
-                                        <span class="text-sm text-behard-light/80">Estratégias nutricionais adaptadas ao seu gasto energético.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4">
-                                    <div class="bg-behard-yellow/20 p-1 rounded text-behard-yellow mt-1">
-                                        <i data-lucide="check" class="w-4 h-4"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-white">Monitoramento Contínuo</strong>
-                                        <span class="text-sm text-behard-light/80">Métricas claras para avaliação de progresso real.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4">
-                                    <div class="bg-behard-yellow/20 p-1 rounded text-behard-yellow mt-1">
-                                        <i data-lucide="check" class="w-4 h-4"></i>
-                                    </div>
-                                    <div>
-                                        <strong class="block text-white">Aderência Comportamental</strong>
-                                        <span class="text-sm text-behard-light/80">Foco na construção de hábitos e disciplina sustentável.</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- NEW MIDDLE CTA -->
-                <div class="reveal mt-16 text-center" style="transition-delay: 400ms;">
-                    <a href="#motivation" class="ripple-btn inline-block px-12 py-5 rounded-full font-bold text-xl transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(242,183,5,0.3)] cursor-pointer bg-behard-yellow text-behard-dark hover:bg-white hover:shadow-behard-yellow/50">
-                        Profissionalize seu Treino
-                    </a>
-                </div>
-
-            </div>
+        <!-- New Lifestyle/Parallax Break Section -->
+        <section id="lifestyle-break" class="py-20 relative h-[500px] flex items-center justify-center overflow-hidden">
+            <!-- Full Width Image Placeholder -->
+             <div class="absolute inset-0 z-0">
+                 <img src="https://picsum.photos/1920/1080?random=200&grayscale" alt="Lifestyle BeHard" class="w-full h-full object-cover opacity-30">
+                 <div class="absolute inset-0 bg-gradient-to-t from-behard-dark via-transparent to-behard-dark"></div>
+             </div>
+             
+             <div class="relative z-10 container mx-auto text-center px-4">
+                 <div class="reveal">
+                     <h2 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
+                         Supere seus <span class="text-transparent bg-clip-text bg-gradient-to-r from-behard-yellow to-white">Limites</span>
+                     </h2>
+                     <p class="text-xl text-behard-light/80 max-w-2xl mx-auto">
+                         Não é apenas sobre estética. É sobre construir a mentalidade de quem não desiste.
+                     </p>
+                 </div>
+             </div>
         </section>
 
         <!-- Gallery Section -->
@@ -1246,7 +1002,20 @@
 
         // Navbar Scroll Logic
         const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
+        let isMenuOpen = false; // Define state globally
+
+        function updateNavbarStyle() {
+            if(!navbar) return;
+
+            // Se o menu estiver aberto, queremos que a navbar fique transparente (para ver o menu por baixo)
+            // mas o botão ainda fique visível.
+            if (isMenuOpen) {
+                navbar.classList.remove('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-4');
+                navbar.classList.add('bg-transparent', 'py-6');
+                return;
+            }
+
+            // Comportamento normal de scroll
             if (window.scrollY > 50) {
                 navbar.classList.add('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-4');
                 navbar.classList.remove('bg-transparent', 'py-6');
@@ -1254,32 +1023,42 @@
                 navbar.classList.remove('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-4');
                 navbar.classList.add('bg-transparent', 'py-6');
             }
-        });
+        }
+
+        window.addEventListener('scroll', updateNavbarStyle);
 
         // Mobile Menu Logic
         const menuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-        const menuIcon = document.getElementById('menu-icon');
-        let isMenuOpen = false;
-
+        const iconMenu = document.getElementById('icon-menu');
+        const iconClose = document.getElementById('icon-close');
+        
         function toggleMenu() {
+            if(!mobileMenu || !iconMenu || !iconClose) return;
+
             isMenuOpen = !isMenuOpen;
+            
+            // Atualiza estilo da navbar imediatamente
+            updateNavbarStyle();
+
             if (isMenuOpen) {
                 mobileMenu.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
                 mobileMenu.classList.add('opacity-100', 'visible');
-                // Replace menu icon with X using data-lucide attribute manipulation is tricky after render
-                // Simpler way: just toggle icon content or transform
-                menuIcon.setAttribute('data-lucide', 'x');
+                iconMenu.classList.add('hidden');
+                iconClose.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Lock scroll
             } else {
                 mobileMenu.classList.add('opacity-0', 'invisible', 'pointer-events-none');
                 mobileMenu.classList.remove('opacity-100', 'visible');
-                menuIcon.setAttribute('data-lucide', 'menu');
+                iconMenu.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+                document.body.style.overflow = ''; // Unlock scroll
             }
-            lucide.createIcons(); // Re-render icon
         }
 
-        menuBtn.addEventListener('click', toggleMenu);
+        if(menuBtn) {
+            menuBtn.addEventListener('click', toggleMenu);
+        }
 
         // Smooth Scroll & Close Menu on Link Click
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1290,6 +1069,8 @@
                 if (isMenuOpen) toggleMenu();
 
                 const targetId = this.getAttribute('href');
+                if(!targetId) return;
+                
                 const targetElement = document.querySelector(targetId);
 
                 if (targetElement) {
@@ -1330,7 +1111,7 @@
                 if (entry.isIntersecting) {
                     const bar = entry.target;
                     const width = bar.getAttribute('data-width');
-                    bar.style.width = width;
+                    if(width) bar.style.width = width;
                     progressObserver.unobserve(bar);
                 }
             });
@@ -1381,20 +1162,22 @@
             const intervalTime = 3500; // 3.5 seconds
 
             setInterval(() => {
+                if (screens.length === 0 || dots.length === 0) return;
+
                 // Remove active from current
-                screens[currentScreen].classList.remove('active');
-                screens[currentScreen].classList.add('inactive');
-                dots[currentScreen].classList.remove('opacity-100');
-                dots[currentScreen].classList.add('opacity-40');
+                screens[currentScreen]?.classList.remove('active');
+                screens[currentScreen]?.classList.add('inactive');
+                dots[currentScreen]?.classList.remove('opacity-100');
+                dots[currentScreen]?.classList.add('opacity-40');
 
                 // Update index
                 currentScreen = (currentScreen + 1) % screens.length;
 
                 // Add active to next
-                screens[currentScreen].classList.remove('inactive');
-                screens[currentScreen].classList.add('active');
-                dots[currentScreen].classList.remove('opacity-40');
-                dots[currentScreen].classList.add('opacity-100');
+                screens[currentScreen]?.classList.remove('inactive');
+                screens[currentScreen]?.classList.add('active');
+                dots[currentScreen]?.classList.remove('opacity-40');
+                dots[currentScreen]?.classList.add('opacity-100');
 
             }, intervalTime);
         });
@@ -1405,31 +1188,38 @@
                 title: 'Mentalidade & Disciplina',
                 desc: 'O treino começa na mente. Conteúdos focados em disciplina e consistência comportamental.',
                 icon: 'brain-circuit',
-                color: '#A855F7' // Purple
+                color: '#A855F7', // Purple
+                short: 'Foco e Disciplina'
             },
             'zone-chest': {
                 title: 'Condicionamento Metabólico',
                 desc: 'Melhore sua capacidade cardiorrespiratória para otimizar sua energia diária e saúde cardiovascular.',
                 icon: 'heart-pulse',
-                color: '#EF4444' // Red
+                color: '#EF4444', // Red
+                short: 'Cardio e Resistência'
             },
             'zone-abs': {
                 title: 'Core & Estabilidade',
                 desc: 'Fortalecimento do centro do corpo para garantir postura adequada e prevenção de dores lombares.',
                 icon: 'clipboard-list',
-                color: '#22C55E' // Green
+                color: '#22C55E', // Green
+                short: 'Postura e Core'
             },
             'zone-arms': {
                 title: 'Força Funcional',
                 desc: 'Exercícios multiarticulares que transferem força para atividades reais do dia a dia.',
                 icon: 'dumbbell',
-                color: '#F2B705' // Yellow
+                color: '#F2B705', // Yellow
+                short: 'Força e Potência'
             }
         };
 
         const muscleGroups = document.querySelectorAll('.muscle-group');
         const cardContent = document.getElementById('card-content');
         const infoCard = document.getElementById('info-card');
+        const tooltip = document.getElementById('body-tooltip');
+        const tooltipTitle = document.getElementById('tooltip-title');
+        const tooltipDesc = document.getElementById('tooltip-desc');
 
         function updateCard(zoneId) {
             const data = bodyData[zoneId];
@@ -1461,35 +1251,46 @@
             }, 300);
         }
 
+        // Add event listeners to muscle groups
         muscleGroups.forEach(group => {
-            // Hover for desktop
+            const zoneId = group.id || group.dataset.ref;
+            const data = bodyData[zoneId];
+
+            // 1. Mouse Enter: Show Tooltip
             group.addEventListener('mouseenter', () => {
-                muscleGroups.forEach(g => g.classList.remove('active'));
-                const groupId = group.id || group.dataset.ref;
-                
-                // Handle duplicate zones (arms)
-                if (groupId) {
-                    document.querySelectorAll(`#${groupId}, [data-ref="${groupId}"]`).forEach(el => el.classList.add('active'));
-                    updateCard(groupId);
-                } else {
-                    group.classList.add('active');
-                    updateCard(group.id);
+                if(data && tooltip && tooltipTitle && tooltipDesc) {
+                    tooltipTitle.innerText = data.title;
+                    tooltipDesc.innerText = data.short;
+                    tooltip.style.opacity = '1';
                 }
             });
 
-            // Click for mobile/tablet
+            // 2. Mouse Move: Move Tooltip
+            group.addEventListener('mousemove', (e) => {
+                if(tooltip) {
+                    const x = e.clientX;
+                    const y = e.clientY;
+                    tooltip.style.left = `${x}px`;
+                    tooltip.style.top = `${y}px`;
+                }
+            });
+
+            // 3. Mouse Leave: Hide Tooltip
+            group.addEventListener('mouseleave', () => {
+                if(tooltip) tooltip.style.opacity = '0';
+            });
+
+            // 4. Click: Activate and Update Card
             group.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent double firing on some touch devices
-                muscleGroups.forEach(g => g.classList.remove('active'));
+                e.preventDefault(); 
                 
-                const groupId = group.id || group.dataset.ref;
-                 // Handle duplicate zones (arms)
-                if (groupId) {
-                    document.querySelectorAll(`#${groupId}, [data-ref="${groupId}"]`).forEach(el => el.classList.add('active'));
-                    updateCard(groupId);
-                } else {
-                     group.classList.add('active');
-                     updateCard(group.id);
+                // Remove active from all
+                muscleGroups.forEach(g => g.classList.remove('active'));
+
+                // Add active to current (and related parts like arms)
+                if (zoneId) {
+                    document.querySelectorAll(`#${zoneId}, [data-ref="${zoneId}"]`).forEach(el => el.classList.add('active'));
+                    updateCard(zoneId);
                 }
             });
         });
@@ -1561,8 +1362,10 @@
                 title += " (Fase Avançada)";
             }
 
-            document.getElementById('result-title').innerText = title;
-            document.getElementById('result-time').innerText = userSelections.time;
+            const titleEl = document.getElementById('result-title');
+            const timeEl = document.getElementById('result-time');
+            if(titleEl) titleEl.innerText = title;
+            if(timeEl) timeEl.innerText = userSelections.time;
             
             lucide.createIcons();
         }
@@ -1573,20 +1376,21 @@
              const step2 = document.getElementById('sim-step-2');
              const step3 = document.getElementById('sim-step-3');
 
-             result.classList.remove('active');
-             result.classList.add('hidden');
+             if(result) {
+                result.classList.remove('active');
+                result.classList.add('hidden');
+             }
 
-             step3.classList.remove('prev'); // Should be prev if coming back? No, result is overlay. 
-             // Logic fix: steps moved to 'prev' state. Need to reset all.
+             if(step3) step3.classList.remove('prev'); 
              
              [step1, step2, step3].forEach(el => {
-                 el.classList.remove('active', 'prev', 'next');
+                 if(el) el.classList.remove('active', 'prev', 'next');
              });
 
              // Reset positions
-             step1.classList.add('active');
-             step2.classList.add('next');
-             step3.classList.add('next');
+             if(step1) step1.classList.add('active');
+             if(step2) step2.classList.add('next');
+             if(step3) step3.classList.add('next');
              
              userSelections.objective = '';
              userSelections.level = '';

@@ -128,17 +128,17 @@
       .muscle-group {
         transition: all 0.3s ease;
         cursor: pointer;
-        fill: rgba(255, 255, 255, 0.1);
-        stroke: rgba(255, 255, 255, 0.3);
+        fill: rgba(255, 255, 255, 0.05); /* Mais sutil por padrão */
+        stroke: rgba(255, 255, 255, 0.2);
         stroke-width: 1;
       }
       
-      /* Subtle Hover Glow */
+      /* Subtle Hover Glow - Visual feedback only, no tooltip */
       .muscle-group:hover {
-        fill: rgba(242, 183, 5, 0.4); /* Sutil Yellow Tint */
+        fill: rgba(242, 183, 5, 0.3);
         stroke: #F2B705;
-        stroke-width: 2;
-        filter: drop-shadow(0 0 5px rgba(242, 183, 5, 0.5));
+        stroke-width: 1.5;
+        filter: drop-shadow(0 0 5px rgba(242, 183, 5, 0.3));
       }
 
       /* Intense Active Click Glow */
@@ -147,33 +147,6 @@
         stroke: #FFFFFF;
         stroke-width: 2;
         filter: drop-shadow(0 0 15px rgba(242, 183, 5, 0.9));
-      }
-
-      /* Body Tooltip Style */
-      #body-tooltip {
-        position: fixed;
-        background: rgba(0, 0, 0, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 10px 15px;
-        border-radius: 8px;
-        font-size: 0.85rem;
-        pointer-events: none;
-        opacity: 0;
-        transform: translate(-50%, -100%);
-        transition: opacity 0.2s ease, transform 0.1s ease;
-        z-index: 100;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        backdrop-filter: blur(4px);
-        margin-top: -15px;
-        white-space: nowrap;
-      }
-
-      #body-tooltip strong {
-        display: block;
-        color: #F2B705;
-        font-size: 0.95rem;
-        margin-bottom: 2px;
       }
 
       /* Progress Bar Styles */
@@ -243,6 +216,53 @@
           top: 0;
       }
 
+      /* FLIP CARD STYLES */
+      .flip-card {
+        perspective: 1000px;
+        height: 440px; /* Fixed height required for consistent flipping */
+      }
+      
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+      }
+      
+      .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+      
+      .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+      }
+      
+      .flip-card-front {
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(8px);
+      }
+      
+      .flip-card-back {
+        background: linear-gradient(135deg, #310055 0%, #1a002e 100%);
+        border: 1px solid #F2B705;
+        transform: rotateY(180deg);
+        justify-content: center;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(242, 183, 5, 0.2);
+      }
+
     </style>
 <script type="importmap">
 {
@@ -257,18 +277,18 @@
 <body class="selection:bg-behard-yellow selection:text-behard-dark">
 
     <!-- Navbar -->
-    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent py-6">
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent py-5">
         <div class="container mx-auto px-4 md:px-8 flex justify-between items-center relative">
             <!-- Logo -->
-            <a href="#home" class="nav-link text-2xl font-bold text-white tracking-wider z-50">
-                BE<span class="text-behard-yellow">HARD</span>
+            <a href="#home" class="nav-link flex items-center gap-2 text-2xl font-bold text-white tracking-wider z-50">
+                <i data-lucide="dumbbell" class="w-8 h-8 text-behard-yellow"></i>
+                <span>BE<span class="text-behard-yellow">HARD</span></span>
             </a>
 
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center gap-8">
+            <div class="hidden lg:flex items-center gap-6">
                 <a href="#home" class="nav-link text-white hover:text-behard-yellow transition-colors font-medium text-sm uppercase tracking-wide">Home</a>
                 <a href="#features" class="nav-link text-white hover:text-behard-yellow transition-colors font-medium text-sm uppercase tracking-wide">Diferenciais</a>
-                <a href="#origin-story" class="nav-link text-white hover:text-behard-yellow transition-colors font-medium text-sm uppercase tracking-wide">Origem</a>
                 <a href="#how-it-works" class="nav-link text-white hover:text-behard-yellow transition-colors font-medium text-sm uppercase tracking-wide">Metodologia</a>
                 <a href="#gallery" class="nav-link text-white hover:text-behard-yellow transition-colors font-medium text-sm uppercase tracking-wide">Equipe</a>
                 <a href="#motivation" class="nav-link ripple-btn px-6 py-2 rounded-full border-2 border-behard-yellow text-behard-yellow hover:bg-behard-yellow hover:text-behard-dark font-bold text-sm transition-all duration-300">
@@ -277,8 +297,7 @@
             </div>
 
             <!-- Mobile Toggle -->
-            <!-- Added relative and z-50 to ensure it stays on top of the fixed menu overlay -->
-            <button id="mobile-menu-btn" class="md:hidden text-white relative z-50 hover:text-behard-yellow transition-colors flex items-center justify-center" aria-label="Toggle menu">
+            <button id="mobile-menu-btn" class="lg:hidden text-white relative z-50 hover:text-behard-yellow transition-colors flex items-center justify-center" aria-label="Toggle menu">
                 <div id="icon-menu" class="block">
                   <i data-lucide="menu" class="w-7 h-7"></i>
                 </div>
@@ -289,17 +308,30 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu Overlay (Moved outside Nav) -->
-    <!-- z-40 ensures it's below the nav (z-50) but covers page content. -->
-    <div id="mobile-menu" class="fixed inset-0 bg-behard-dark/95 backdrop-blur-xl z-40 flex flex-col justify-center items-center gap-8 transition-all duration-300 opacity-0 invisible pointer-events-none overflow-y-auto">
-        <a href="#home" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Home</a>
-        <a href="#features" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Diferenciais</a>
-        <a href="#origin-story" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Origem</a>
-        <a href="#how-it-works" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Metodologia</a>
-        <a href="#gallery" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Equipe</a>
-        <a href="#motivation" class="mobile-link ripple-btn px-8 py-4 rounded-full bg-behard-yellow text-behard-dark font-bold text-lg hover:bg-white transition-all shadow-lg">
-            Acessar App
-        </a>
+    <!-- Mobile Menu Drawer Overlay -->
+    <!-- z-40 ensures it's below the navbar (z-50) so the toggle button stays visible/clickable -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 z-40 invisible pointer-events-none" aria-hidden="true">
+        
+        <!-- Backdrop (Left Side Blur) -->
+        <div id="mobile-menu-backdrop" class="absolute inset-0 bg-behard-dark/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+        
+        <!-- Drawer Panel (Right Side) -->
+        <!-- pb-20 added to lift the links visual center up slightly -->
+        <div id="mobile-menu-panel" class="absolute right-0 top-0 h-full w-[85%] md:w-[50%] max-w-sm bg-behard-dark border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-center items-center gap-8 z-50 pb-20 overflow-y-auto">
+            
+            <!-- Decorative Element inside drawer -->
+            <div class="absolute top-0 right-0 w-40 h-40 bg-behard-yellow/10 rounded-bl-full pointer-events-none"></div>
+
+            <a href="#home" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Home</a>
+            <a href="#features" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Diferenciais</a>
+            <a href="#origin-story" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Origem</a>
+            <a href="#how-it-works" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Metodologia</a>
+            <a href="#gallery" class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors">Equipe</a>
+            
+            <a href="#motivation" class="mobile-link ripple-btn mt-4 px-8 py-4 rounded-full bg-behard-yellow text-behard-dark font-bold text-lg hover:bg-white transition-all shadow-lg transform hover:scale-105">
+                Acessar App
+            </a>
+        </div>
     </div>
 
     <!-- Main Content -->
@@ -335,7 +367,7 @@
                         <!-- Abstract shape -->
                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-behard-yellow/20 rounded-full blur-3xl -z-10"></div>
                         <img 
-                            src="https://picsum.photos/600/600?random=1&grayscale" 
+                            src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=800&auto=format&fit=crop" 
                             alt="Homem treinando" 
                             class="rounded-3xl shadow-2xl border-4 border-white/10 w-full max-w-[500px] object-cover aspect-square hover:scale-105 transition-transform duration-500"
                         />
@@ -349,7 +381,7 @@
             </div>
         </section>
 
-        <!-- Features Section -->
+        <!-- Features Section (FLIP CARDS) -->
         <section id="features" class="py-20 px-4 md:px-8 bg-black/20">
             <div class="container mx-auto">
                 <div class="reveal text-center mb-16">
@@ -358,68 +390,115 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Card 1 -->
-                    <div class="reveal h-full group" style="transition-delay: 100ms;">
-                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center relative overflow-hidden">
-                            <!-- Image Placeholder -->
-                            <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5">
-                                <img src="https://picsum.photos/400/250?random=50&grayscale" alt="Treino Individual" class="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500">
-                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem do App/Treino</span>
+                    
+                    <!-- Card 1: Treino Individualizado -->
+                    <div class="reveal flip-card group cursor-pointer" style="transition-delay: 100ms;">
+                        <div class="flip-card-inner">
+                            <!-- Front -->
+                            <div class="flip-card-front p-6">
+                                <!-- Image Placeholder -->
+                                <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5 flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=600&auto=format&fit=crop" alt="Treino Individual" class="w-full h-full object-cover opacity-80">
+                                </div>
+                                <div class="flex flex-col items-center flex-grow justify-center">
+                                    <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
+                                        <div class="text-behard-yellow">
+                                            <i data-lucide="activity" class="w-8 h-8"></i>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-1">Treino Individualizado</h3>
+                                    <span class="text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                                 </div>
                             </div>
-
-                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
-                                <div class="text-behard-yellow">
-                                    <i data-lucide="activity" class="w-8 h-8"></i>
+                            
+                            <!-- Back -->
+                            <div class="flip-card-back">
+                                <div class="text-behard-yellow mb-4">
+                                    <i data-lucide="activity" class="w-10 h-10"></i>
                                 </div>
+                                <h3 class="text-xl font-bold text-white mb-4">Prescrição Fisiológica</h3>
+                                <p class="text-behard-light/90 leading-relaxed text-sm mb-6">
+                                    Prescrição ajustada dinamicamente à sua capacidade de recuperação. Nosso algoritmo analisa seu histórico para evitar overtraining e maximizar resultados.
+                                </p>
+                                <button onclick="document.getElementById('simulator').scrollIntoView({behavior: 'smooth'})" class="px-6 py-2 rounded-full bg-behard-yellow text-behard-dark font-bold text-sm hover:bg-white transition-colors">
+                                    Simular Meu Treino
+                                </button>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-3">Treino Individualizado</h3>
-                            <p class="text-behard-light/80 leading-relaxed text-sm">Prescrição ajustada dinamicamente à sua capacidade de recuperação fisiológica e individualidade biológica.</p>
                         </div>
                     </div>
 
                     <!-- Card 2: Metodologia Eficaz -->
-                    <div class="reveal h-full group" style="transition-delay: 200ms;">
-                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center relative overflow-hidden">
-                            <!-- Image Placeholder -->
-                            <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5">
-                                <img src="https://picsum.photos/400/250?random=51&grayscale" alt="Metodologia" class="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500">
-                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Metodologia</span>
+                    <div class="reveal flip-card group cursor-pointer" style="transition-delay: 200ms;">
+                        <div class="flip-card-inner">
+                            <!-- Front -->
+                            <div class="flip-card-front p-6">
+                                <!-- Image Placeholder -->
+                                <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5 flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop" alt="Metodologia" class="w-full h-full object-cover opacity-80">
+                                </div>
+                                <div class="flex flex-col items-center flex-grow justify-center">
+                                    <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
+                                        <div class="text-behard-yellow">
+                                            <i data-lucide="clipboard-check" class="w-8 h-8"></i>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-1">Metodologia Eficaz</h3>
+                                    <span class="text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                                 </div>
                             </div>
-
-                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
-                                <div class="text-behard-yellow">
-                                    <i data-lucide="clipboard-check" class="w-8 h-8"></i>
+                            
+                            <!-- Back -->
+                            <div class="flip-card-back">
+                                <div class="text-behard-yellow mb-4">
+                                    <i data-lucide="clipboard-check" class="w-10 h-10"></i>
                                 </div>
+                                <h3 class="text-xl font-bold text-white mb-4">Organização & Hábito</h3>
+                                <p class="text-behard-light/90 leading-relaxed text-sm mb-6">
+                                    Processo estruturado focado em organização. Desenvolva constância através de hábitos sustentáveis e elimine a dependência de motivação diária.
+                                </p>
+                                <button onclick="document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'})" class="px-6 py-2 rounded-full bg-behard-yellow text-behard-dark font-bold text-sm hover:bg-white transition-colors">
+                                    Conhecer Método
+                                </button>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-3">Metodologia Eficaz</h3>
-                            <p class="text-behard-light/80 leading-relaxed text-sm">Processo estruturado focado em organização. Desenvolva constância através de hábitos sustentáveis.</p>
                         </div>
                     </div>
 
-                    <!-- Card 3 -->
-                    <div class="reveal h-full group" style="transition-delay: 300ms;">
-                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors duration-300 h-full flex flex-col items-center text-center relative overflow-hidden">
-                            <!-- Image Placeholder -->
-                            <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5">
-                                <img src="https://picsum.photos/400/250?random=52&grayscale" alt="Suporte" class="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500">
-                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Suporte</span>
+                    <!-- Card 3: Suporte Profissional -->
+                    <div class="reveal flip-card group cursor-pointer" style="transition-delay: 300ms;">
+                        <div class="flip-card-inner">
+                            <!-- Front -->
+                            <div class="flip-card-front p-6">
+                                <!-- Image Placeholder -->
+                                <div class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5 flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop" alt="Suporte" class="w-full h-full object-cover opacity-80">
+                                </div>
+                                <div class="flex flex-col items-center flex-grow justify-center">
+                                    <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
+                                        <div class="text-behard-yellow">
+                                            <i data-lucide="users" class="w-8 h-8"></i>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-1">Suporte Profissional</h3>
+                                    <span class="text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                                 </div>
                             </div>
-
-                            <div class="bg-behard-yellow/10 p-4 rounded-full mb-4">
-                                <div class="text-behard-yellow">
-                                    <i data-lucide="users" class="w-8 h-8"></i>
+                            
+                            <!-- Back -->
+                            <div class="flip-card-back">
+                                <div class="text-behard-yellow mb-4">
+                                    <i data-lucide="users" class="w-10 h-10"></i>
                                 </div>
+                                <h3 class="text-xl font-bold text-white mb-4">Equipe Especializada</h3>
+                                <p class="text-behard-light/90 leading-relaxed text-sm mb-6">
+                                    Acesso direto a um corpo técnico especializado para ajustes de treino, correção biomecânica por vídeo e orientação estratégica de longo prazo.
+                                </p>
+                                <button onclick="document.getElementById('gallery').scrollIntoView({behavior: 'smooth'})" class="px-6 py-2 rounded-full bg-behard-yellow text-behard-dark font-bold text-sm hover:bg-white transition-colors">
+                                    Ver Equipe
+                                </button>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-3">Suporte Profissional</h3>
-                            <p class="text-behard-light/80 leading-relaxed text-sm">Acesso a corpo técnico especializado para ajustes de treino, correção biomecânica e orientação.</p>
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -498,7 +577,7 @@
                         class="w-full h-full object-cover" 
                         controls 
                         preload="metadata"
-                        poster="https://picsum.photos/1280/720?random=20&grayscale"
+                        poster="https://images.unsplash.com/photo-1574680096141-1cddd32e04ca?q=80&w=1280&auto=format&fit=crop"
                     >
                         <!-- IMPORTANTE: Coloque o arquivo de vídeo na mesma pasta ou ajuste o caminho abaixo (src) -->
                         <source src="video-metodologia.mp4" type="video/mp4">
@@ -529,7 +608,7 @@
                         <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col">
                             <!-- Placeholder Image for Card -->
                             <div class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5">
-                                 <img src="https://picsum.photos/500/300?random=100&grayscale" alt="O Problema" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 <img src="https://images.unsplash.com/photo-1599552683573-9dc48255b7ef?q=80&w=600&auto=format&fit=crop" alt="O Problema" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                     <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Problema</span>
                                 </div>
@@ -552,7 +631,7 @@
                         <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col">
                             <!-- Placeholder Image for Card -->
                             <div class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5">
-                                 <img src="https://picsum.photos/500/300?random=101&grayscale" alt="O Diagnóstico" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 <img src="https://images.unsplash.com/photo-1550345332-09e3ac987658?q=80&w=600&auto=format&fit=crop" alt="O Diagnóstico" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                     <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Diagnóstico</span>
                                 </div>
@@ -575,7 +654,7 @@
                          <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col">
                             <!-- Placeholder Image for Card -->
                             <div class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5">
-                                 <img src="https://picsum.photos/500/300?random=102&grayscale" alt="O Propósito" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=600&auto=format&fit=crop" alt="O Propósito" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                     <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem Propósito</span>
                                 </div>
@@ -598,7 +677,7 @@
                          <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col">
                             <!-- Placeholder Image for Card -->
                             <div class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5">
-                                 <img src="https://picsum.photos/500/300?random=103&grayscale" alt="A Execução" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
+                                 <img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?q=80&w=600&auto=format&fit=crop" alt="A Execução" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                     <span class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm">Imagem App</span>
                                 </div>
@@ -637,39 +716,63 @@
                          <!-- Glow background -->
                          <div class="absolute inset-0 bg-behard-yellow/5 blur-3xl rounded-full"></div>
                          
-                         <!-- Tooltip Element -->
-                         <div id="body-tooltip">
-                             <strong id="tooltip-title">Titulo</strong>
-                             <span id="tooltip-desc">Descrição curta</span>
-                         </div>
+                         <!-- Tooltip Element Removed as requested -->
 
                          <svg width="300" height="500" viewBox="0 0 300 500" class="drop-shadow-2xl z-10 animate-float" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Body Outline (Base) -->
-                            <path d="M150 60 C130 60 115 75 115 95 C115 115 130 130 150 130 C170 130 185 115 185 95 C185 75 170 60 150 60 Z" class="muscle-group" id="zone-head" />
+                            <!-- Defs for reuse if needed -->
+                            <defs>
+                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="3" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                            </defs>
+
+                            <!-- STATIC BACK BODY (Legs/Torso base) -->
+                            <path d="M120 280 L180 280 L195 380 L170 480 L150 490 L130 480 L105 380 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+
+                            <!-- INTERACTIVE ZONES - Anatomical Shapes -->
+
+                            <!-- Head/Neck (Zone Head) -->
+                            <path 
+                                d="M150 30 C135 30 125 45 125 65 C125 85 135 100 150 100 C165 100 175 85 175 65 C175 45 165 30 150 30 Z M138 100 Q150 110 162 100 L165 115 Q150 120 135 115 Z" 
+                                class="muscle-group" 
+                                id="zone-head" 
+                            />
                             
-                            <!-- Neck -->
-                            <path d="M140 130 L160 130 L165 150 L135 150 Z" fill="rgba(255,255,255,0.1)" />
+                            <!-- Chest/Pectorals (Zone Chest) -->
+                            <path 
+                                d="M115 115 Q150 135 185 115 Q200 125 190 155 Q150 175 110 155 Q100 125 115 115 Z" 
+                                class="muscle-group" 
+                                id="zone-chest" 
+                            />
 
-                            <!-- Chest (Peito) -->
-                            <path d="M120 150 L180 150 L200 190 L150 210 L100 190 Z" class="muscle-group" id="zone-chest" />
+                            <!-- Abs/Core (Zone Abs) -->
+                            <path 
+                                d="M120 160 Q150 175 180 160 L175 250 Q150 265 125 250 Z" 
+                                class="muscle-group" 
+                                id="zone-abs" 
+                            />
 
-                            <!-- Abs (Abdomen) -->
-                            <path d="M110 190 L190 190 L180 270 L150 280 L120 270 Z" class="muscle-group" id="zone-abs" />
+                            <!-- Arms (Zone Arms) -->
+                            <!-- Left Arm (Deltoid + Bicep + Forearm) -->
+                            <path 
+                                d="M100 120 Q80 125 70 160 Q65 190 60 220 Q70 230 85 220 Q90 180 110 135 Z" 
+                                class="muscle-group" 
+                                id="zone-arms" 
+                            />
+                            <!-- Right Arm (Deltoid + Bicep + Forearm) -->
+                            <path 
+                                d="M200 120 Q220 125 230 160 Q235 190 240 220 Q230 230 215 220 Q210 180 190 135 Z" 
+                                class="muscle-group" 
+                                data-ref="zone-arms" 
+                            />
 
-                            <!-- Arms (Left & Right grouped logic) -->
-                            <!-- Left Arm -->
-                            <path d="M100 155 L70 160 L60 220 L80 230 L110 170 Z" class="muscle-group" id="zone-arms" />
-                            <!-- Right Arm -->
-                            <path d="M200 155 L230 160 L240 220 L220 230 L190 170 Z" class="muscle-group" data-ref="zone-arms" /> <!-- Linking visually handled by JS or CSS hover -->
-
-                            <!-- Legs (Static) -->
-                            <path d="M120 270 L150 280 L180 270 L185 380 L160 480 L140 480 L115 380 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" />
                         </svg>
 
                         <!-- Pulse indicators -->
-                        <div class="absolute top-[80px] left-1/2 -translate-x-1/2 w-4 h-4 bg-purple-500 rounded-full animate-pulse-slow pointer-events-none"></div>
-                        <div class="absolute top-[180px] left-1/2 -translate-x-1/2 w-4 h-4 bg-red-500 rounded-full animate-pulse-slow pointer-events-none" style="animation-delay: 1s;"></div>
-                        <div class="absolute top-[230px] left-1/2 -translate-x-1/2 w-4 h-4 bg-green-500 rounded-full animate-pulse-slow pointer-events-none" style="animation-delay: 2s;"></div>
+                        <div class="absolute top-[65px] left-1/2 -translate-x-1/2 w-4 h-4 bg-purple-500 rounded-full animate-pulse-slow pointer-events-none"></div>
+                        <div class="absolute top-[135px] left-1/2 -translate-x-1/2 w-4 h-4 bg-red-500 rounded-full animate-pulse-slow pointer-events-none" style="animation-delay: 1s;"></div>
+                        <div class="absolute top-[200px] left-1/2 -translate-x-1/2 w-4 h-4 bg-green-500 rounded-full animate-pulse-slow pointer-events-none" style="animation-delay: 2s;"></div>
                     </div>
 
                     <!-- Right: Info Card -->
@@ -865,12 +968,12 @@
                 </div>
             </div>
         </section>
-
+        
         <!-- New Lifestyle/Parallax Break Section -->
         <section id="lifestyle-break" class="py-20 relative h-[500px] flex items-center justify-center overflow-hidden">
             <!-- Full Width Image Placeholder -->
              <div class="absolute inset-0 z-0">
-                 <img src="https://picsum.photos/1920/1080?random=200&grayscale" alt="Lifestyle BeHard" class="w-full h-full object-cover opacity-30">
+                 <img src="https://images.unsplash.com/photo-1434596922112-19c563067271?q=80&w=1920&auto=format&fit=crop" alt="Lifestyle BeHard" class="w-full h-full object-cover opacity-30">
                  <div class="absolute inset-0 bg-gradient-to-t from-behard-dark via-transparent to-behard-dark"></div>
              </div>
              
@@ -900,7 +1003,7 @@
                         <div class="flex flex-col items-center">
                             <div class="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-behard-yellow shadow-xl mb-6 group cursor-pointer">
                                 <img 
-                                    src="https://picsum.photos/400/400?random=10&grayscale" 
+                                    src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop" 
                                     alt="Planejamento Estratégico" 
                                     class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                                 />
@@ -913,7 +1016,7 @@
                         <div class="flex flex-col items-center">
                             <div class="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-behard-yellow shadow-xl mb-6 group cursor-pointer">
                                 <img 
-                                    src="https://picsum.photos/400/400?random=11&grayscale" 
+                                    src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop" 
                                     alt="Aparelhos de Academia" 
                                     class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                                 />
@@ -926,7 +1029,7 @@
                         <div class="flex flex-col items-center">
                             <div class="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-behard-yellow shadow-xl mb-6 group cursor-pointer">
                                 <img 
-                                    src="https://picsum.photos/400/400?random=12&grayscale" 
+                                    src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?q=80&w=600&auto=format&fit=crop" 
                                     alt="Personal Trainer" 
                                     class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                                 />
@@ -1002,7 +1105,7 @@
         </div>
     </footer>
 
-    <script>
+    <script type="module">
         // Initialize Icons
         lucide.createIcons();
 
@@ -1016,18 +1119,21 @@
             // Se o menu estiver aberto, queremos que a navbar fique transparente (para ver o menu por baixo)
             // mas o botão ainda fique visível.
             if (isMenuOpen) {
-                navbar.classList.remove('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-4');
-                navbar.classList.add('bg-transparent', 'py-6');
+                // Alterado py-4 para py-3 e py-6 para py-5 para manter consistência com o tamanho menor
+                navbar.classList.remove('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+                navbar.classList.add('bg-transparent', 'py-5');
                 return;
             }
 
             // Comportamento normal de scroll
             if (window.scrollY > 50) {
-                navbar.classList.add('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-4');
-                navbar.classList.remove('bg-transparent', 'py-6');
+                // Alterado py-4 para py-3 para ser mais compacto ao rolar
+                navbar.classList.add('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+                navbar.classList.remove('bg-transparent', 'py-5');
             } else {
-                navbar.classList.remove('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-4');
-                navbar.classList.add('bg-transparent', 'py-6');
+                // Alterado py-6 para py-5 para o tamanho padrão inicial
+                navbar.classList.remove('bg-behard-dark/90', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+                navbar.classList.add('bg-transparent', 'py-5');
             }
         }
 
@@ -1035,12 +1141,14 @@
 
         // Mobile Menu Logic
         const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+        const mobileMenuPanel = document.getElementById('mobile-menu-panel');
         const iconMenu = document.getElementById('icon-menu');
         const iconClose = document.getElementById('icon-close');
         
         function toggleMenu() {
-            if(!mobileMenu || !iconMenu || !iconClose) return;
+            if(!mobileMenuOverlay || !iconMenu || !iconClose || !mobileMenuPanel || !mobileMenuBackdrop) return;
 
             isMenuOpen = !isMenuOpen;
             
@@ -1048,14 +1156,38 @@
             updateNavbarStyle();
 
             if (isMenuOpen) {
-                mobileMenu.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
-                mobileMenu.classList.add('opacity-100', 'visible');
+                // Show Overlay container
+                mobileMenuOverlay.classList.remove('invisible', 'pointer-events-none');
+                
+                // Fade in backdrop
+                setTimeout(() => {
+                    mobileMenuBackdrop.classList.remove('opacity-0');
+                    mobileMenuBackdrop.classList.add('opacity-100');
+                }, 10);
+
+                // Slide in Panel
+                setTimeout(() => {
+                    mobileMenuPanel.classList.remove('translate-x-full');
+                    mobileMenuPanel.classList.add('translate-x-0');
+                }, 10);
+
                 iconMenu.classList.add('hidden');
                 iconClose.classList.remove('hidden');
                 document.body.style.overflow = 'hidden'; // Lock scroll
             } else {
-                mobileMenu.classList.add('opacity-0', 'invisible', 'pointer-events-none');
-                mobileMenu.classList.remove('opacity-100', 'visible');
+                // Slide out Panel
+                mobileMenuPanel.classList.remove('translate-x-0');
+                mobileMenuPanel.classList.add('translate-x-full');
+
+                // Fade out backdrop
+                mobileMenuBackdrop.classList.remove('opacity-100');
+                mobileMenuBackdrop.classList.add('opacity-0');
+
+                // Hide overlay after transition
+                setTimeout(() => {
+                    mobileMenuOverlay.classList.add('invisible', 'pointer-events-none');
+                }, 300);
+
                 iconMenu.classList.remove('hidden');
                 iconClose.classList.add('hidden');
                 document.body.style.overflow = ''; // Unlock scroll
@@ -1064,6 +1196,13 @@
 
         if(menuBtn) {
             menuBtn.addEventListener('click', toggleMenu);
+        }
+
+        // Close menu when clicking outside (on backdrop)
+        if(mobileMenuBackdrop) {
+            mobileMenuBackdrop.addEventListener('click', () => {
+                if(isMenuOpen) toggleMenu();
+            });
         }
 
         // Smooth Scroll & Close Menu on Link Click
@@ -1223,9 +1362,8 @@
         const muscleGroups = document.querySelectorAll('.muscle-group');
         const cardContent = document.getElementById('card-content');
         const infoCard = document.getElementById('info-card');
-        const tooltip = document.getElementById('body-tooltip');
-        const tooltipTitle = document.getElementById('tooltip-title');
-        const tooltipDesc = document.getElementById('tooltip-desc');
+        
+        // Tooltip Elements Removed (tooltip, tooltipTitle, tooltipDesc)
 
         function updateCard(zoneId) {
             const data = bodyData[zoneId];
@@ -1262,31 +1400,9 @@
             const zoneId = group.id || group.dataset.ref;
             const data = bodyData[zoneId];
 
-            // 1. Mouse Enter: Show Tooltip
-            group.addEventListener('mouseenter', () => {
-                if(data && tooltip && tooltipTitle && tooltipDesc) {
-                    tooltipTitle.innerText = data.title;
-                    tooltipDesc.innerText = data.short;
-                    tooltip.style.opacity = '1';
-                }
-            });
+            // REMOVIDO: Listeners de mouseenter, mousemove e mouseleave para tooltip
 
-            // 2. Mouse Move: Move Tooltip
-            group.addEventListener('mousemove', (e) => {
-                if(tooltip) {
-                    const x = e.clientX;
-                    const y = e.clientY;
-                    tooltip.style.left = `${x}px`;
-                    tooltip.style.top = `${y}px`;
-                }
-            });
-
-            // 3. Mouse Leave: Hide Tooltip
-            group.addEventListener('mouseleave', () => {
-                if(tooltip) tooltip.style.opacity = '0';
-            });
-
-            // 4. Click: Activate and Update Card
+            // 1. Click: Activate and Update Card (Mantido)
             group.addEventListener('click', (e) => {
                 e.preventDefault(); 
                 
@@ -1308,7 +1424,7 @@
             time: ''
         };
 
-        function selectOption(step, value) {
+        window.selectOption = function(step, value) {
             if (step === 1) userSelections.objective = value;
             if (step === 2) userSelections.level = value;
             if (step === 3) userSelections.time = value;
@@ -1337,7 +1453,7 @@
             }
         }
 
-        function prevStep(step) {
+        window.prevStep = function(step) {
             const current = document.getElementById(`sim-step-${step}`);
             const prev = document.getElementById(`sim-step-${step - 1}`);
 
@@ -1378,7 +1494,7 @@
             lucide.createIcons();
         }
 
-        function resetSimulator() {
+        window.resetSimulator = function() {
              const result = document.getElementById('sim-result');
              const step1 = document.getElementById('sim-step-1');
              const step2 = document.getElementById('sim-step-2');

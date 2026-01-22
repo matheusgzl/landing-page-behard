@@ -235,6 +235,10 @@
         transform: rotateY(180deg);
       }
       
+      .flip-card.flipped .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+      
       .flip-card-front, .flip-card-back {
         position: absolute;
         width: 100%;
@@ -407,7 +411,7 @@
                                         </div>
                                     </div>
                                     <h3 class="text-xl font-bold text-white mb-1">Treino Individualizado</h3>
-                                    <span class="text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+                                    <span class="flip-trigger text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                                 </div>
                             </div>
                             
@@ -443,7 +447,7 @@
                                         </div>
                                     </div>
                                     <h3 class="text-xl font-bold text-white mb-1">Metodologia Eficaz</h3>
-                                    <span class="text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+                                    <span class="flip-trigger text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                                 </div>
                             </div>
                             
@@ -479,7 +483,7 @@
                                         </div>
                                     </div>
                                     <h3 class="text-xl font-bold text-white mb-1">Suporte Profissional</h3>
-                                    <span class="text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+                                    <span class="flip-trigger text-sm text-behard-yellow mt-4 opacity-80 flex items-center gap-1 group-hover:gap-2 transition-all relative z-10">Saber mais <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                                 </div>
                             </div>
                             
@@ -1520,6 +1524,34 @@
              userSelections.level = '';
              userSelections.time = '';
         }
+
+        // FLIP CARD MOBILE LOGIC
+        const flipTriggers = document.querySelectorAll('.flip-trigger');
+        const flipCards = document.querySelectorAll('.flip-card');
+
+        flipTriggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Stop propagation to prevent immediate toggle back if we add listener to card
+                const card = trigger.closest('.flip-card');
+                if(card) {
+                    // Remove flipped class from other cards (accordion style) - optional but good for mobile
+                    flipCards.forEach(c => {
+                        if(c !== card) c.classList.remove('flipped');
+                    });
+                    card.classList.add('flipped');
+                }
+            });
+        });
+
+        // Click anywhere on the back to flip back, or click the card to toggle off if active
+        flipCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if(card.classList.contains('flipped')) {
+                    card.classList.remove('flipped');
+                }
+            });
+        });
 
     </script>
 </body>

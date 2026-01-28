@@ -552,9 +552,9 @@
         <div
           class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
         >
-          <!-- Text Content -->
+          <!-- Text Content (Order 1 on mobile) -->
           <div
-            class="order-2 md:order-1 flex flex-col items-start space-y-6 z-10"
+            class="order-1 md:order-1 flex flex-col items-start space-y-6 z-10"
           >
             <div class="reveal">
               <h1
@@ -582,8 +582,8 @@
             </div>
           </div>
 
-          <!-- Image Content -->
-          <div class="order-1 md:order-2 flex justify-center relative">
+          <!-- Image Content (Order 2 on mobile) -->
+          <div class="order-2 md:order-2 flex justify-center relative">
             <div class="reveal relative" style="transition-delay: 300ms">
               <!-- Abstract shape -->
               <div
@@ -1200,16 +1200,15 @@
             <video
               class="w-full h-full object-cover"
               controls
-              loop
               preload="metadata"
-              poster="imagens/Criação_de_Vídeo_Institucional_BeHard.mp4"
+              poster="imagens/Agent_video_Pippit_20260128014910.mp4"
             >
               <!-- IMPORTANTE: Coloque o arquivo de vídeo na mesma pasta ou ajuste o caminho abaixo (src) -->
-              <source src="imagens/Criação_de_Vídeo_Institucional_BeHard.mp4" type="video/mp4" />
+              <source src="imagens/Agent_video_Pippit_20260128014910.mp4" type="video/mp4" />
               <p class="text-white p-4">
                 Seu navegador não suporta a reprodução de vídeos.
                 <a
-                  href="imagens/Criação_de_Vídeo_Institucional_BeHard.mp4"
+                  href="imagens/Agent_video_Pippit_20260128014910.mp4"
                   class="text-behard-yellow underline"
                   >Baixar vídeo</a
                 >.
@@ -1248,7 +1247,7 @@
               class="text-behard-yellow text-sm font-bold tracking-[0.2em] uppercase mb-2 block"
               >Nossa História</span
             >
-            <h2 class="text-3xl md:text-4xl font-bold text-white">
+            <h2 class="text-2xl md:text-4xl font-bold text-white">
               O DNA <span class="text-behard-yellow">BeHard</span>
             </h2>
             <p class="text-white/50 mt-4 text-sm md:text-base">
@@ -1259,9 +1258,50 @@
           <div
             class="reveal flex flex-col md:flex-row items-center justify-center gap-12 lg:gap-24"
           >
-            <!-- Left: Interactive DNA SVG -->
+            <!-- Right: Info Panel (Order 1 on mobile, Order 2 on desktop) -->
             <div
-              class="relative w-full max-w-[200px] md:max-w-[250px] h-[500px] flex justify-center"
+              class="order-1 md:order-2 w-full max-w-md min-h-[250px] relative"
+            >
+              <!-- Glassmorphism Card -->
+              <div
+                id="dna-info-card"
+                class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:border-behard-yellow/30 shadow-2xl"
+              >
+                <!-- Dynamic Content Container -->
+                <div
+                  id="dna-content"
+                  class="dna-info-panel fade-in relative z-10"
+                >
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow"
+                    >
+                      <i data-lucide="dna" class="w-6 h-6"></i>
+                    </div>
+                    <span
+                      class="text-xs font-bold uppercase tracking-widest text-white/50"
+                      >Explore o DNA</span
+                    >
+                  </div>
+                  <h3 class="text-2xl font-bold text-white mb-3">
+                    Conexão BeHard
+                  </h3>
+                  <p class="text-behard-light/80 leading-relaxed">
+                    Nossa metodologia é viva. Interaja com a estrutura ao lado
+                    para entender como conectamos ciência e prática.
+                  </p>
+                </div>
+
+                <!-- Decorative background glow -->
+                <div
+                  class="absolute -bottom-10 -right-10 w-32 h-32 bg-behard-yellow/10 rounded-full blur-2xl pointer-events-none"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Left: Interactive DNA SVG (Order 2 on mobile, Order 1 on desktop) -->
+            <div
+              class="order-2 md:order-1 relative w-full max-w-[200px] md:max-w-[250px] h-[300px] md:h-[500px] flex justify-center"
             >
               <svg
                 viewBox="0 0 100 400"
@@ -1356,45 +1396,6 @@
                 </circle>
               </svg>
             </div>
-
-            <!-- Right: Info Panel (Modal-like) -->
-            <div class="w-full max-w-md min-h-[250px] relative">
-              <!-- Glassmorphism Card -->
-              <div
-                id="dna-info-card"
-                class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:border-behard-yellow/30 shadow-2xl"
-              >
-                <!-- Dynamic Content Container -->
-                <div
-                  id="dna-content"
-                  class="dna-info-panel fade-in relative z-10"
-                >
-                  <div class="flex items-center gap-3 mb-4">
-                    <div
-                      class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow"
-                    >
-                      <i data-lucide="dna" class="w-6 h-6"></i>
-                    </div>
-                    <span
-                      class="text-xs font-bold uppercase tracking-widest text-white/50"
-                      >Explore o DNA</span
-                    >
-                  </div>
-                  <h3 class="text-2xl font-bold text-white mb-3">
-                    Conexão BeHard
-                  </h3>
-                  <p class="text-behard-light/80 leading-relaxed">
-                    Nossa metodologia é viva. Interaja com a estrutura ao lado
-                    para entender como conectamos ciência e prática.
-                  </p>
-                </div>
-
-                <!-- Decorative background glow -->
-                <div
-                  class="absolute -bottom-10 -right-10 w-32 h-32 bg-behard-yellow/10 rounded-full blur-2xl pointer-events-none"
-                ></div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -1406,9 +1407,8 @@
       >
         <div class="container mx-auto">
           <div class="reveal text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-              Mapa de
-              <span class="text-behard-yellow">Desempenho com Qualidade</span>
+            <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
+              Mapa de <span class="text-behard-yellow">Desempenho</span>
             </h2>
             <p class="text-behard-light/70 max-w-xl mx-auto">
               Interaja com as áreas para entender como equilibramos esforço,
@@ -1417,18 +1417,57 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <!-- Left: Interactive SVG -->
-            <div class="reveal flex justify-center relative">
+            <!-- Right: Info Card (Order 1 on mobile, Order 2 on desktop) -->
+            <div
+              class="order-1 md:order-2 reveal relative h-[300px]"
+              style="transition-delay: 200ms"
+            >
+              <div
+                id="info-card"
+                class="bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 h-full flex flex-col justify-center transition-all duration-500 relative overflow-hidden group"
+              >
+                <!-- Default State -->
+                <div
+                  id="card-content"
+                  class="relative z-10 transition-opacity duration-300"
+                >
+                  <div class="flex items-center gap-4 mb-4">
+                    <div
+                      class="p-3 rounded-lg bg-white/10 text-white/50 shadow-lg border border-white/5"
+                    >
+                      <i data-lucide="mouse-pointer-2" class="w-8 h-8"></i>
+                    </div>
+                    <span
+                      class="uppercase tracking-widest font-bold text-sm text-white/50"
+                      >Interaja com o Mapa</span
+                    >
+                  </div>
+                  <h3 class="text-3xl font-bold text-white mb-3">
+                    Selecione uma área
+                  </h3>
+                  <p class="text-behard-light/60 text-lg leading-relaxed">
+                    Cada parte do corpo representa um pilar fundamental da
+                    metodologia BeHard. Descubra como integramos mente e corpo.
+                  </p>
+                </div>
+
+                <!-- Decorative background glow -->
+                <div
+                  class="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-[80px] rounded-full pointer-events-none group-hover:bg-behard-yellow/10 transition-colors duration-500"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Left: Interactive SVG (Order 2 on mobile, Order 1 on desktop) -->
+            <div class="order-2 md:order-1 reveal flex justify-center relative">
               <!-- Glow background -->
               <div
                 class="absolute inset-0 bg-behard-yellow/5 blur-3xl rounded-full"
               ></div>
 
-              <!-- Tooltip Element Removed as requested -->
-
               <svg
                 viewBox="0 0 300 500"
-                class="w-full h-auto max-w-[300px] drop-shadow-2xl z-10 animate-float"
+                class="w-full h-auto max-w-[200px] md:max-w-[300px] drop-shadow-2xl z-10 animate-float"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <!-- Defs for reuse if needed -->
@@ -1508,47 +1547,6 @@
                 style="animation-delay: 2s"
               ></div>
             </div>
-
-            <!-- Right: Info Card -->
-            <div
-              class="reveal relative h-[300px]"
-              style="transition-delay: 200ms"
-            >
-              <div
-                id="info-card"
-                class="bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 h-full flex flex-col justify-center transition-all duration-500 relative overflow-hidden group"
-              >
-                <!-- Default State -->
-                <div
-                  id="card-content"
-                  class="relative z-10 transition-opacity duration-300"
-                >
-                  <div class="flex items-center gap-4 mb-4">
-                    <div
-                      class="p-3 rounded-lg bg-white/10 text-white/50 shadow-lg border border-white/5"
-                    >
-                      <i data-lucide="mouse-pointer-2" class="w-8 h-8"></i>
-                    </div>
-                    <span
-                      class="uppercase tracking-widest font-bold text-sm text-white/50"
-                      >Interaja com o Mapa</span
-                    >
-                  </div>
-                  <h3 class="text-3xl font-bold text-white mb-3">
-                    Selecione uma área
-                  </h3>
-                  <p class="text-behard-light/60 text-lg leading-relaxed">
-                    Cada parte do corpo representa um pilar fundamental da
-                    metodologia BeHard. Descubra como integramos mente e corpo.
-                  </p>
-                </div>
-
-                <!-- Decorative background glow -->
-                <div
-                  class="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-[80px] rounded-full pointer-events-none group-hover:bg-behard-yellow/10 transition-colors duration-500"
-                ></div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -1573,57 +1571,10 @@
             class="flex flex-col lg:flex-row gap-12 items-stretch reveal"
             style="transition-delay: 150ms"
           >
-            <!-- Left: Dynamic Content Display -->
+            <!-- Right: Grid of Interactive Buttons (Order 1 on mobile, Order 2 on desktop) -->
             <div
-              id="result-display"
-              class="w-full lg:w-1/2 bg-gradient-to-br from-[#310055] to-black border border-white/10 rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[400px] shadow-2xl"
+              class="order-1 lg:order-2 w-full lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-4"
             >
-              <!-- Background Icon Faded -->
-              <div
-                id="result-bg-icon"
-                class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none"
-              >
-                <i data-lucide="repeat" class="w-64 h-64 text-white"></i>
-              </div>
-
-              <!-- Content -->
-              <div
-                id="result-content"
-                class="relative z-10 result-display-content fade-in"
-              >
-                <div
-                  class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-behard-yellow/10 border border-behard-yellow/20 text-behard-yellow font-bold text-sm mb-6"
-                >
-                  <i data-lucide="star" class="w-4 h-4"></i>
-                  <span>Pilar Fundamental</span>
-                </div>
-                <h3
-                  class="text-3xl md:text-4xl font-bold text-white mb-6"
-                  id="result-title"
-                >
-                  Constância
-                </h3>
-                <p
-                  class="text-xl text-behard-light/80 leading-relaxed mb-8"
-                  id="result-desc"
-                >
-                  Transforme o esforço esporádico em um hábito consistente. A
-                  chave não é a intensidade de um dia, mas a frequência de todos
-                  os dias.
-                </p>
-
-                <a
-                  href="#simulator"
-                  class="inline-flex items-center gap-2 text-behard-yellow font-bold hover:gap-4 transition-all"
-                >
-                  Definir meus objetivos
-                  <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                </a>
-              </div>
-            </div>
-
-            <!-- Right: Grid of Interactive Buttons -->
-            <div class="w-full lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Btn 1 -->
               <button
                 class="result-btn active group bg-white/5 hover:bg-white/10 p-6 rounded-2xl border border-white/10 text-left flex flex-col gap-4"
@@ -1711,6 +1662,55 @@
                   </p>
                 </div>
               </button>
+            </div>
+
+            <!-- Left: Dynamic Content Display (Order 2 on mobile, Order 1 on desktop) -->
+            <div
+              id="result-display"
+              class="order-2 lg:order-1 w-full lg:w-1/2 bg-gradient-to-br from-[#310055] to-black border border-white/10 rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[400px] shadow-2xl"
+            >
+              <!-- Background Icon Faded -->
+              <div
+                id="result-bg-icon"
+                class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none"
+              >
+                <i data-lucide="repeat" class="w-64 h-64 text-white"></i>
+              </div>
+
+              <!-- Content -->
+              <div
+                id="result-content"
+                class="relative z-10 result-display-content fade-in"
+              >
+                <div
+                  class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-behard-yellow/10 border border-behard-yellow/20 text-behard-yellow font-bold text-sm mb-6"
+                >
+                  <i data-lucide="star" class="w-4 h-4"></i>
+                  <span>Pilar Fundamental</span>
+                </div>
+                <h3
+                  class="text-3xl md:text-4xl font-bold text-white mb-6"
+                  id="result-title"
+                >
+                  Constância
+                </h3>
+                <p
+                  class="text-xl text-behard-light/80 leading-relaxed mb-8"
+                  id="result-desc"
+                >
+                  Transforme o esforço esporádico em um hábito consistente. A
+                  chave não é a intensidade de um dia, mas a frequência de todos
+                  os dias.
+                </p>
+
+                <a
+                  href="#simulator"
+                  class="inline-flex items-center gap-2 text-behard-yellow font-bold hover:gap-4 transition-all"
+                >
+                  Definir meus objetivos
+                  <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>

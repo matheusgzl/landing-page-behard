@@ -151,26 +151,25 @@
       /* DNA Styles */
       .dna-path {
         fill: none;
-        stroke-width: 2;
+        stroke-width: 4;
         stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
       }
-      .dna-connector {
-        stroke: rgba(255, 255, 255, 0.1);
+
+      .dna-connector-line {
+        stroke: rgba(255, 255, 255, 0.2);
         stroke-width: 1;
       }
-      .dna-node {
+
+      .dna-node-group {
         cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        fill: #310055;
-        stroke: rgba(255, 255, 255, 0.5);
-        stroke-width: 2;
+        transition: filter 0.3s ease;
       }
-      .dna-node:hover,
-      .dna-node.active-node {
-        fill: #f2b705;
-        stroke: #fff;
+
+      .dna-node-group:hover circle {
+        stroke: #f2b705;
+        stroke-width: 3;
         filter: drop-shadow(0 0 8px #f2b705);
-        r: 10; /* Increase radius on hover */
       }
 
       /* Info Panel Animation */
@@ -1214,82 +1213,11 @@
               class="order-2 md:order-1 relative w-full max-w-[200px] md:max-w-[250px] h-[300px] md:h-[500px] flex justify-center"
             >
               <svg
+                id="dna-svg"
                 viewBox="0 0 100 400"
-                class="h-full w-full overflow-visible drop-shadow-[0_0_15px_rgba(242,183,5,0.3)] animate-float"
+                class="h-full w-full overflow-visible drop-shadow-[0_0_15px_rgba(242,183,5,0.3)]"
               >
-                <line x1="30" y1="50" x2="70" y2="50" class="dna-connector" />
-                <line x1="30" y1="150" x2="70" y2="150" class="dna-connector" />
-                <line x1="30" y1="250" x2="70" y2="250" class="dna-connector" />
-                <line x1="30" y1="350" x2="70" y2="350" class="dna-connector" />
-                <path
-                  d="M30,0 Q70,50 30,100 T30,200 T30,300 T30,400"
-                  stroke="#6818A5"
-                  class="dna-path"
-                />
-                <path
-                  d="M70,0 Q30,50 70,100 T70,200 T70,300 T70,400"
-                  stroke="#F2B705"
-                  class="dna-path"
-                />
-                <circle
-                  cx="30"
-                  cy="50"
-                  r="6"
-                  class="dna-node"
-                  data-step="noise"
-                >
-                  <animate
-                    attributeName="r"
-                    values="6;8;6"
-                    dur="3s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-                <circle
-                  cx="70"
-                  cy="150"
-                  r="6"
-                  class="dna-node"
-                  data-step="diagnosis"
-                >
-                  <animate
-                    attributeName="r"
-                    values="6;8;6"
-                    dur="3s"
-                    begin="1s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-                <circle
-                  cx="30"
-                  cy="250"
-                  r="6"
-                  class="dna-node"
-                  data-step="purpose"
-                >
-                  <animate
-                    attributeName="r"
-                    values="6;8;6"
-                    dur="3s"
-                    begin="2s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-                <circle
-                  cx="70"
-                  cy="350"
-                  r="6"
-                  class="dna-node"
-                  data-step="solution"
-                >
-                  <animate
-                    attributeName="r"
-                    values="6;8;6"
-                    dur="3s"
-                    begin="0.5s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
+                <!-- Dynamic Content Will Be Injected Here via JS -->
               </svg>
             </div>
           </div>
@@ -2490,7 +2418,7 @@
           });
         });
 
-        // DNA Logic
+        // DNA Logic & Animation
         const dnaData = {
           noise: {
             title: "O Ruído",
@@ -2526,15 +2454,137 @@
             dnaContent.classList.add("fade-in");
           }, 400);
         }
-        document.querySelectorAll(".dna-node").forEach((node) => {
-          node.addEventListener("mouseenter", () => {
-            updateDnaContent(node.getAttribute("data-step"));
+
+        // DNA Spiraling Animation Logic
+        const svg = document.getElementById("dna-svg");
+        if (svg) {
+          const width = 100;
+          const height = 400;
+          const amplitude = 35;
+          const frequency = 0.012;
+          const speed = 0.05; // Speed of rotation
+          const centerX = width / 2;
+          let phase = 0;
+
+          // Define node Y positions - Center aligned
+          const nodePositions = [
+            { id: "noise", y: 50 },
+            { id: "diagnosis", y: 150 },
+            { id: "purpose", y: 250 },
+            { id: "solution", y: 350 },
+          ];
+
+          // Create SVG elements dynamically
+          const createPath = (color) => {
+            const p = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "path",
+            );
+            p.setAttribute("stroke", color);
+            p.setAttribute("class", "dna-path");
+            p.setAttribute("fill", "none");
+            return p;
+          };
+
+          const path1 = createPath("#6818A5"); // Purple
+          const path2 = createPath("#F2B705"); // Yellow
+          svg.appendChild(path1);
+          svg.appendChild(path2);
+
+          // Create Groups for interactive nodes
+          const nodeGroups = nodePositions.map((node) => {
+            const g = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "g",
+            );
+            g.setAttribute("class", "dna-node-group");
+            g.setAttribute("data-step", node.id);
+
+            const line = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "line",
+            );
+            line.setAttribute("class", "dna-connector-line");
+
+            const circle = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "circle",
+            );
+            circle.setAttribute("r", "6");
+            circle.setAttribute("fill", "#1A002E"); // Dark fill
+            circle.setAttribute("stroke", "rgba(255,255,255,0.6)");
+            circle.setAttribute("stroke-width", "2");
+
+            g.appendChild(line);
+            g.appendChild(circle);
+            svg.appendChild(g);
+
+            // Add interactivity
+            g.addEventListener("mouseenter", () => updateDnaContent(node.id));
+            g.addEventListener("click", (e) => {
+              e.preventDefault();
+              updateDnaContent(node.id);
+            });
+
+            return { g, line, circle, y: node.y };
           });
-          node.addEventListener("click", (e) => {
-            e.preventDefault();
-            updateDnaContent(node.getAttribute("data-step"));
-          });
-        });
+
+          function animateDNA() {
+            phase += speed;
+
+            let d1 = `M ${centerX} 0`;
+            let d2 = `M ${centerX} 0`;
+
+            // Generate Helix Paths
+            for (let y = 0; y <= height; y += 5) {
+              const x1 = centerX + Math.sin(y * frequency + phase) * amplitude;
+              const x2 =
+                centerX + Math.sin(y * frequency + phase + Math.PI) * amplitude;
+
+              if (y === 0) {
+                d1 = `M ${x1} ${y}`;
+                d2 = `M ${x2} ${y}`;
+              } else {
+                d1 += ` L ${x1} ${y}`;
+                d2 += ` L ${x2} ${y}`;
+              }
+            }
+
+            path1.setAttribute("d", d1);
+            path2.setAttribute("d", d2);
+
+            // Update Nodes (STATIC ZigZag, Dynamic Connectors)
+            nodeGroups.forEach((item, index) => {
+              const y = item.y;
+
+              // Calculate strand X positions at this Y level
+              const strand1X =
+                centerX + Math.sin(y * frequency + phase) * amplitude;
+              const strand2X =
+                centerX + Math.sin(y * frequency + phase + Math.PI) * amplitude;
+
+              // ZigZag Logic: Right, Left, Right, Left
+              const offset = 20;
+              const direction = index % 2 === 0 ? 1 : -1;
+              const nodeX = centerX + offset * direction;
+
+              item.circle.setAttribute("cx", nodeX);
+              item.circle.setAttribute("cy", y);
+
+              // Line connects Strand 1 to Strand 2
+              item.line.setAttribute("x1", strand1X);
+              item.line.setAttribute("y1", y);
+              item.line.setAttribute("x2", strand2X);
+              item.line.setAttribute("y2", y);
+
+              // Keep connectors subtle
+              item.line.setAttribute("opacity", "0.3");
+            });
+
+            requestAnimationFrame(animateDNA);
+          }
+          animateDNA();
+        }
 
         // Results Logic (Desktop)
         const resultData = [

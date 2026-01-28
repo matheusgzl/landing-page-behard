@@ -2,7 +2,10 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>BeHard - Metodologia e Desempenho</title>
 
     <!-- Tailwind CSS -->
@@ -42,11 +45,17 @@
             animation: {
               "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
               float: "float 6s ease-in-out infinite",
+              scroll: "scroll 40s linear infinite",
+              "spin-slow": "spin 15s linear infinite",
             },
             keyframes: {
               float: {
                 "0%, 100%": { transform: "translateY(0)" },
                 "50%": { transform: "translateY(-10px)" },
+              },
+              scroll: {
+                "0%": { transform: "translateX(0)" },
+                "100%": { transform: "translateX(-50%)" },
               },
             },
           },
@@ -54,8 +63,12 @@
       };
     </script>
     <style>
+      html,
       body {
+        overflow-x: hidden;
+        width: 100%;
         margin: 0;
+        padding: 0;
         font-family: "Poppins", sans-serif;
         background: linear-gradient(
           to bottom,
@@ -68,8 +81,8 @@
         );
         color: #f2f2f2;
         min-height: 100vh;
-        overflow-x: hidden;
       }
+
       /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 10px;
@@ -85,15 +98,26 @@
         background: #d9a404;
       }
 
-      /* Animation Classes */
+      /* Animation Classes - UPDATED FOR SAFETY */
       .reveal {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 1s ease-out;
-      }
-      .reveal.active {
         opacity: 1;
         transform: translateY(0);
+        transition: all 1s ease-out;
+      }
+
+      .reveal-pending {
+        opacity: 0 !important;
+        transform: translateY(20px) !important;
+      }
+
+      .reveal.active {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+      }
+
+      /* Pause animation on hover */
+      .hover-pause:hover .animate-scroll {
+        animation-play-state: paused;
       }
 
       /* Ripple Effect Styles */
@@ -122,6 +146,46 @@
           transform: scale(4);
           opacity: 0;
         }
+      }
+
+      /* DNA Styles */
+      .dna-path {
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+      }
+      .dna-connector {
+        stroke: rgba(255, 255, 255, 0.1);
+        stroke-width: 1;
+      }
+      .dna-node {
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        fill: #310055;
+        stroke: rgba(255, 255, 255, 0.5);
+        stroke-width: 2;
+      }
+      .dna-node:hover,
+      .dna-node.active-node {
+        fill: #f2b705;
+        stroke: #fff;
+        filter: drop-shadow(0 0 8px #f2b705);
+        r: 10; /* Increase radius on hover */
+      }
+
+      /* Info Panel Animation */
+      .dna-info-panel {
+        transition:
+          opacity 0.4s ease,
+          transform 0.4s ease;
+      }
+      .dna-info-panel.fade-out {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      .dna-info-panel.fade-in {
+        opacity: 1;
+        transform: translateX(0);
       }
 
       /* Phone Screen Animation */
@@ -280,18 +344,50 @@
         padding: 2rem;
         box-shadow: 0 10px 30px rgba(242, 183, 5, 0.2);
       }
+
+      /* Sticky CTA Animation */
+      .sticky-cta {
+        transition:
+          transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          opacity 0.3s ease;
+      }
+      .sticky-cta.hidden-cta {
+        transform: scale(0) translateY(20px);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sticky-cta.visible-cta {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
     </style>
     <script type="importmap">
       {
         "imports": {
-          "react": "https://esm.sh/react@^19.2.3",
-          "react/": "https://esm.sh/react@^19.2.3/",
-          "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+          "react/": "https://esm.sh/react@^19.2.4/",
+          "react": "https://esm.sh/react@^19.2.4",
+          "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
         }
       }
     </script>
   </head>
   <body class="selection:bg-behard-yellow selection:text-behard-dark">
+    <!-- FLOATING STICKY CTA (New) -->
+    <a
+      href="#motivation"
+      id="sticky-cta"
+      class="sticky-cta hidden-cta fixed bottom-6 right-6 z-40 bg-behard-yellow text-behard-dark p-4 md:px-6 md:py-3 rounded-full shadow-[0_0_20px_rgba(242,183,5,0.4)] hover:shadow-[0_0_30px_rgba(242,183,5,0.6)] hover:scale-105 transition-all flex items-center gap-3 font-bold group border-2 border-transparent hover:border-white"
+    >
+      <span class="hidden md:block">Começar Agora</span>
+      <div class="bg-behard-dark text-behard-yellow p-1 rounded-full">
+        <i
+          data-lucide="arrow-right"
+          class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+        ></i>
+      </div>
+    </a>
+
     <!-- Navbar -->
     <nav
       id="navbar"
@@ -677,387 +773,271 @@
         </div>
       </section>
 
-      <!-- New App Preview Section -->
+      <!-- NEW: Infinite Community Marquee (Social Proof - Fictional Beta Testers) -->
       <section
-        id="app-preview"
-        class="py-24 px-4 md:px-8 bg-gradient-to-br from-[#1a002e] to-[#310055] overflow-hidden"
+        id="community"
+        class="py-16 bg-[#1a002e]/50 border-y border-white/5 overflow-hidden hover-pause"
       >
-        <div
-          class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
-        >
-          <!-- Left Content -->
-          <div class="order-2 md:order-1 text-left reveal">
-            <span
-              class="text-behard-yellow font-bold tracking-widest text-sm uppercase mb-2 block"
-              >Seu Parceiro Diário</span
-            >
-            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
-              Tecnologia que <br />
-              <span class="text-behard-yellow">acompanha você</span>
-            </h2>
-            <p class="text-behard-light/80 text-lg mb-8 leading-relaxed">
-              Esqueça planilhas complexas e PDFs perdidos. O app BeHard
-              centraliza toda a sua jornada: da execução correta do exercício ao
-              controle de macronutrientes.
-            </p>
-
-            <div class="flex flex-col gap-6">
-              <div class="flex items-center gap-4">
-                <div
-                  class="w-12 h-12 rounded-full bg-behard-yellow/10 flex items-center justify-center text-behard-yellow"
-                >
-                  <i data-lucide="smartphone" class="w-6 h-6"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-white">Interface Intuitiva</h4>
-                  <p class="text-sm text-behard-light/60">
-                    Design limpo focado no que importa: seu treino.
-                  </p>
-                </div>
-              </div>
-              <div class="flex items-center gap-4">
-                <div
-                  class="w-12 h-12 rounded-full bg-behard-yellow/10 flex items-center justify-center text-behard-yellow"
-                >
-                  <i data-lucide="bar-chart-2" class="w-6 h-6"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-white">Analytics em Tempo Real</h4>
-                  <p class="text-sm text-behard-light/60">
-                    Visualize sua evolução de carga e medidas.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-10 flex gap-4">
-              <button
-                class="bg-white text-behard-dark px-6 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-gray-200 transition-colors"
-              >
-                <i data-lucide="apple" class="w-5 h-5"></i> App Store
-              </button>
-              <button
-                class="bg-transparent border border-white/30 text-white px-6 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-white/10 transition-colors"
-              >
-                <i data-lucide="play-circle" class="w-5 h-5"></i> Google Play
-              </button>
-            </div>
-          </div>
-
-          <!-- Right Phone Mockup -->
-          <div
-            class="order-1 md:order-2 flex justify-center reveal"
-            style="transition-delay: 200ms"
+        <div class="mb-10 text-center reveal">
+          <span
+            class="text-behard-yellow font-bold tracking-widest text-xs uppercase mb-2 block"
+            >Experiência Beta</span
           >
+          <h3 class="text-2xl font-bold text-white">
+            O impacto na <span class="text-behard-yellow">Rotina Real</span>
+          </h3>
+        </div>
+
+        <div class="flex whitespace-nowrap overflow-hidden">
+          <div class="animate-scroll flex gap-8 px-4">
+            <!-- Duplicate Content for seamless loop (Set 1) -->
+            <!-- Card 1 -->
             <div
-              class="relative w-[320px] h-[650px] bg-gray-900 rounded-[3rem] border-8 border-gray-800 shadow-2xl overflow-hidden ring-4 ring-black/50"
+              class="w-[300px] md:w-[350px] p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex-shrink-0 hover:bg-white/10 hover:border-behard-yellow/30 transition-all cursor-default"
             >
-              <!-- Dynamic Notch -->
-              <div
-                class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-30 flex justify-center items-center"
-              >
-                <div class="w-16 h-1 bg-gray-800 rounded-full opacity-50"></div>
-              </div>
-
-              <!-- Gloss Effect -->
-              <div
-                class="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/5 to-transparent pointer-events-none z-20 rounded-[2.5rem]"
-              ></div>
-
-              <!-- Screen 1: Workout -->
-              <div
-                class="phone-screen active absolute inset-0 bg-[#0f0f13] pt-12 px-6 pb-6 flex flex-col h-full"
-              >
-                <div class="flex justify-between items-center mb-6">
-                  <div>
-                    <p class="text-gray-400 text-xs uppercase font-bold">
-                      Hoje
-                    </p>
-                    <h3 class="text-white text-2xl font-bold">Treino A</h3>
-                  </div>
-                  <div
-                    class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center"
-                  >
-                    <i
-                      data-lucide="calendar"
-                      class="w-5 h-5 text-behard-yellow"
-                    ></i>
-                  </div>
-                </div>
-
-                <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                  <div
-                    class="bg-behard-yellow text-behard-dark px-4 py-1 rounded-full text-xs font-bold whitespace-nowrap"
-                  >
-                    Peito
-                  </div>
-                  <div
-                    class="bg-gray-800 text-gray-300 px-4 py-1 rounded-full text-xs font-bold whitespace-nowrap"
-                  >
-                    Ombro
-                  </div>
-                  <div
-                    class="bg-gray-800 text-gray-300 px-4 py-1 rounded-full text-xs font-bold whitespace-nowrap"
-                  >
-                    Tríceps
-                  </div>
-                </div>
-
-                <div class="space-y-4 flex-1 overflow-y-auto no-scrollbar">
-                  <!-- Exercise Item -->
-                  <div
-                    class="bg-gray-800/50 p-4 rounded-xl flex items-center gap-4 border border-gray-700/50"
-                  >
-                    <div
-                      class="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0"
-                    >
-                      <i data-lucide="dumbbell" class="text-white w-6 h-6"></i>
-                    </div>
-                    <div class="flex-1">
-                      <h4 class="text-white font-bold text-sm">Supino Reto</h4>
-                      <p class="text-gray-400 text-xs">4 Séries x 10 Reps</p>
-                    </div>
-                    <div class="text-behard-yellow font-bold text-sm">20kg</div>
-                  </div>
-                  <!-- Exercise Item -->
-                  <div
-                    class="bg-gray-800/50 p-4 rounded-xl flex items-center gap-4 border border-gray-700/50"
-                  >
-                    <div
-                      class="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0"
-                    >
-                      <i
-                        data-lucide="arrow-up-circle"
-                        class="text-white w-6 h-6"
-                      ></i>
-                    </div>
-                    <div class="flex-1">
-                      <h4 class="text-white font-bold text-sm">
-                        Crucifixo 45º
-                      </h4>
-                      <p class="text-gray-400 text-xs">3 Séries x 12 Reps</p>
-                    </div>
-                    <div class="text-behard-yellow font-bold text-sm">14kg</div>
-                  </div>
-                  <!-- Exercise Item -->
-                  <div
-                    class="bg-gray-800/50 p-4 rounded-xl flex items-center gap-4 border border-gray-700/50"
-                  >
-                    <div
-                      class="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0"
-                    >
-                      <i data-lucide="activity" class="text-white w-6 h-6"></i>
-                    </div>
-                    <div class="flex-1">
-                      <h4 class="text-white font-bold text-sm">
-                        Desenvolvimento
-                      </h4>
-                      <p class="text-gray-400 text-xs">4 Séries x 8 Reps</p>
-                    </div>
-                    <div class="text-behard-yellow font-bold text-sm">18kg</div>
-                  </div>
-                </div>
-
-                <button
-                  class="w-full bg-behard-yellow text-behard-dark py-4 rounded-xl font-bold mt-4 shadow-[0_0_20px_rgba(242,183,5,0.3)]"
-                >
-                  Iniciar Treino
-                </button>
-              </div>
-
-              <!-- Screen 2: Nutrition -->
-              <div
-                class="phone-screen inactive absolute inset-0 bg-[#0f0f13] pt-12 px-6 pb-6 flex flex-col h-full"
-              >
-                <div class="flex justify-between items-center mb-6">
-                  <div>
-                    <p class="text-gray-400 text-xs uppercase font-bold">
-                      Nutrição
-                    </p>
-                    <h3 class="text-white text-2xl font-bold">Metas Diárias</h3>
-                  </div>
-                </div>
-
-                <!-- Circular Chart Mockup -->
-                <div class="flex justify-center mb-8 relative">
-                  <div
-                    class="w-40 h-40 rounded-full border-[12px] border-gray-800 relative flex items-center justify-center"
-                  >
-                    <div
-                      class="absolute inset-0 rounded-full border-[12px] border-behard-yellow border-t-transparent border-l-transparent rotate-45"
-                    ></div>
-                    <div class="text-center">
-                      <span class="block text-2xl font-bold text-white"
-                        >1850</span
-                      >
-                      <span class="text-xs text-gray-400">kcal restantes</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex justify-between mb-8 px-2">
-                  <div class="text-center">
-                    <span class="block text-behard-yellow font-bold">145g</span>
-                    <span class="text-xs text-gray-500">Prot</span>
-                  </div>
-                  <div class="text-center">
-                    <span class="block text-blue-400 font-bold">210g</span>
-                    <span class="text-xs text-gray-500">Carb</span>
-                  </div>
-                  <div class="text-center">
-                    <span class="block text-purple-400 font-bold">65g</span>
-                    <span class="text-xs text-gray-500">Gord</span>
-                  </div>
-                </div>
-
-                <h4 class="text-white font-bold mb-4">Refeições</h4>
-                <div class="space-y-3 flex-1">
-                  <div
-                    class="flex justify-between items-center p-4 bg-gray-800/40 rounded-xl border border-gray-700/30"
-                  >
-                    <div class="flex items-center gap-3">
-                      <div class="w-2 h-2 rounded-full bg-behard-yellow"></div>
-                      <div>
-                        <p class="text-white font-medium text-sm">
-                          Café da Manhã
-                        </p>
-                        <p class="text-gray-500 text-xs">Ovos, Aveia, Frutas</p>
-                      </div>
-                    </div>
-                    <span class="text-white font-bold text-sm">450 kcal</span>
-                  </div>
-                  <div
-                    class="flex justify-between items-center p-4 bg-gray-800/40 rounded-xl border border-gray-700/30"
-                  >
-                    <div class="flex items-center gap-3">
-                      <div class="w-2 h-2 rounded-full bg-blue-400"></div>
-                      <div>
-                        <p class="text-white font-medium text-sm">Almoço</p>
-                        <p class="text-gray-500 text-xs">
-                          Frango, Arroz, Salada
-                        </p>
-                      </div>
-                    </div>
-                    <span class="text-white font-bold text-sm">620 kcal</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Screen 3: Progress -->
-              <div
-                class="phone-screen inactive absolute inset-0 bg-[#0f0f13] pt-12 px-6 pb-6 flex flex-col h-full"
-              >
-                <div class="flex justify-between items-center mb-8">
-                  <div>
-                    <p class="text-gray-400 text-xs uppercase font-bold">
-                      Evolução
-                    </p>
-                    <h3 class="text-white text-2xl font-bold">Seu Progresso</h3>
-                  </div>
-                </div>
-
+              <div class="flex items-center gap-4 mb-4">
                 <div
-                  class="bg-gray-800/50 p-6 rounded-2xl border border-gray-700/50 mb-6"
+                  class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-behard-yellow"
                 >
-                  <div class="flex justify-between items-end h-32 gap-2">
-                    <div
-                      class="w-full bg-gray-700/30 rounded-t-lg relative group"
-                    >
-                      <div
-                        class="absolute bottom-0 w-full bg-behard-yellow/40 h-[40%] rounded-t-lg transition-all group-hover:bg-behard-yellow"
-                      ></div>
-                    </div>
-                    <div
-                      class="w-full bg-gray-700/30 rounded-t-lg relative group"
-                    >
-                      <div
-                        class="absolute bottom-0 w-full bg-behard-yellow/50 h-[55%] rounded-t-lg transition-all group-hover:bg-behard-yellow"
-                      ></div>
-                    </div>
-                    <div
-                      class="w-full bg-gray-700/30 rounded-t-lg relative group"
-                    >
-                      <div
-                        class="absolute bottom-0 w-full bg-behard-yellow/60 h-[45%] rounded-t-lg transition-all group-hover:bg-behard-yellow"
-                      ></div>
-                    </div>
-                    <div
-                      class="w-full bg-gray-700/30 rounded-t-lg relative group"
-                    >
-                      <div
-                        class="absolute bottom-0 w-full bg-behard-yellow/80 h-[70%] rounded-t-lg transition-all group-hover:bg-behard-yellow"
-                      ></div>
-                    </div>
-                    <div
-                      class="w-full bg-gray-700/30 rounded-t-lg relative group"
-                    >
-                      <div
-                        class="absolute bottom-0 w-full bg-behard-yellow h-[85%] rounded-t-lg shadow-[0_0_15px_rgba(242,183,5,0.4)]"
-                      ></div>
-                    </div>
-                  </div>
-                  <div
-                    class="flex justify-between mt-3 text-xs text-gray-500 font-medium"
-                  >
-                    <span>Sem 1</span>
-                    <span>Sem 2</span>
-                    <span>Sem 3</span>
-                    <span>Sem 4</span>
-                    <span>Atual</span>
-                  </div>
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
                 </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                  <div
-                    class="bg-gray-800/40 p-4 rounded-xl border border-gray-700/30"
+                <div>
+                  <h4 class="text-white font-bold">Beta Tester #042</h4>
+                  <span class="text-behard-light/50 text-xs block"
+                    >Perfil: Executiva</span
                   >
-                    <p class="text-gray-400 text-xs mb-1">Peso Total</p>
-                    <h4 class="text-white text-xl font-bold">
-                      -3.2
-                      <span class="text-sm font-normal text-gray-500">kg</span>
-                    </h4>
-                  </div>
-                  <div
-                    class="bg-gray-800/40 p-4 rounded-xl border border-gray-700/30"
-                  >
-                    <p class="text-gray-400 text-xs mb-1">Massa Magra</p>
-                    <h4 class="text-white text-xl font-bold">
-                      +1.5
-                      <span class="text-sm font-normal text-gray-500">kg</span>
-                    </h4>
-                  </div>
-                  <div
-                    class="bg-gray-800/40 p-4 rounded-xl border border-gray-700/30"
-                  >
-                    <p class="text-gray-400 text-xs mb-1">Treinos</p>
-                    <h4 class="text-white text-xl font-bold">
-                      18
-                      <span class="text-sm font-normal text-gray-500"
-                        >dias</span
-                      >
-                    </h4>
-                  </div>
-                  <div
-                    class="bg-gray-800/40 p-4 rounded-xl border border-gray-700/30"
-                  >
-                    <p class="text-gray-400 text-xs mb-1">Regularidade</p>
-                    <h4 class="text-white text-xl font-bold">92%</h4>
-                  </div>
+                </div>
+                <div
+                  class="ml-auto bg-behard-yellow/20 text-behard-yellow text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  Organização
                 </div>
               </div>
+              <p class="text-behard-light/70 text-sm whitespace-normal">
+                "Finalmente uma metodologia que se adapta à minha agenda de
+                reuniões. A flexibilidade do app é o ponto forte."
+              </p>
             </div>
 
-            <!-- Carousel Dots (outside phone) -->
-            <div class="absolute -bottom-8 flex gap-2">
-              <div
-                class="screen-dot w-2 h-2 rounded-full bg-behard-yellow opacity-100 transition-opacity"
-              ></div>
-              <div
-                class="screen-dot w-2 h-2 rounded-full bg-behard-yellow opacity-40 transition-opacity"
-              ></div>
-              <div
-                class="screen-dot w-2 h-2 rounded-full bg-behard-yellow opacity-40 transition-opacity"
-              ></div>
+            <!-- Card 2 -->
+            <div
+              class="w-[300px] md:w-[350px] p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex-shrink-0 hover:bg-white/10 hover:border-behard-yellow/30 transition-all cursor-default"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-behard-yellow"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 class="text-white font-bold">Beta Tester #015</h4>
+                  <span class="text-behard-light/50 text-xs block"
+                    >Perfil: Intermediário</span
+                  >
+                </div>
+                <div
+                  class="ml-auto bg-blue-500/20 text-blue-400 text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  Metodologia
+                </div>
+              </div>
+              <p class="text-behard-light/70 text-sm whitespace-normal">
+                "A lógica de progressão de carga automática me tirou do platô.
+                Sinto que estou treinando de verdade agora."
+              </p>
+            </div>
+
+            <!-- Card 3 -->
+            <div
+              class="w-[300px] md:w-[350px] p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex-shrink-0 hover:bg-white/10 hover:border-behard-yellow/30 transition-all cursor-default"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-behard-yellow"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 class="text-white font-bold">Beta Tester #088</h4>
+                  <span class="text-behard-light/50 text-xs block"
+                    >Perfil: Iniciante</span
+                  >
+                </div>
+                <div
+                  class="ml-auto bg-purple-500/20 text-purple-400 text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  Usabilidade
+                </div>
+              </div>
+              <p class="text-behard-light/70 text-sm whitespace-normal">
+                "Interface limpa e sem distrações. Consigo registrar meu treino
+                em segundos entre as séries."
+              </p>
+            </div>
+
+            <!-- Card 4 -->
+            <div
+              class="w-[300px] md:w-[350px] p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex-shrink-0 hover:bg-white/10 hover:border-behard-yellow/30 transition-all cursor-default"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-behard-yellow"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 class="text-white font-bold">Beta Tester #033</h4>
+                  <span class="text-behard-light/50 text-xs block"
+                    >Perfil: Avançado</span
+                  >
+                </div>
+                <div
+                  class="ml-auto bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  Foco
+                </div>
+              </div>
+              <p class="text-behard-light/70 text-sm whitespace-normal">
+                "A parte de mentalidade é o diferencial. Não é só levantar peso,
+                é construir consistência."
+              </p>
+            </div>
+
+            <!-- Duplicate Set 2 (Seamless) -->
+            <!-- Card 1 -->
+            <div
+              class="w-[300px] md:w-[350px] p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex-shrink-0 hover:bg-white/10 hover:border-behard-yellow/30 transition-all cursor-default"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-behard-yellow"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 class="text-white font-bold">Beta Tester #042</h4>
+                  <span class="text-behard-light/50 text-xs block"
+                    >Perfil: Executiva</span
+                  >
+                </div>
+                <div
+                  class="ml-auto bg-behard-yellow/20 text-behard-yellow text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  Organização
+                </div>
+              </div>
+              <p class="text-behard-light/70 text-sm whitespace-normal">
+                "Finalmente uma metodologia que se adapta à minha agenda de
+                reuniões. A flexibilidade do app é o ponto forte."
+              </p>
+            </div>
+
+            <!-- Card 2 -->
+            <div
+              class="w-[300px] md:w-[350px] p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex-shrink-0 hover:bg-white/10 hover:border-behard-yellow/30 transition-all cursor-default"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-behard-yellow"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 class="text-white font-bold">Beta Tester #015</h4>
+                  <span class="text-behard-light/50 text-xs block"
+                    >Perfil: Intermediário</span
+                  >
+                </div>
+                <div
+                  class="ml-auto bg-blue-500/20 text-blue-400 text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  Metodologia
+                </div>
+              </div>
+              <p class="text-behard-light/70 text-sm whitespace-normal">
+                "A lógica de progressão de carga automática me tirou do platô.
+                Sinto que estou treinando de verdade agora."
+              </p>
+            </div>
+
+            <!-- Card 3 -->
+            <div
+              class="w-[300px] md:w-[350px] p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex-shrink-0 hover:bg-white/10 hover:border-behard-yellow/30 transition-all cursor-default"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-behard-yellow"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 class="text-white font-bold">Beta Tester #088</h4>
+                  <span class="text-behard-light/50 text-xs block"
+                    >Perfil: Iniciante</span
+                  >
+                </div>
+                <div
+                  class="ml-auto bg-purple-500/20 text-purple-400 text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  Usabilidade
+                </div>
+              </div>
+              <p class="text-behard-light/70 text-sm whitespace-normal">
+                "Interface limpa e sem distrações. Consigo registrar meu treino
+                em segundos entre as séries."
+              </p>
+            </div>
+
+            <!-- Card 4 -->
+            <div
+              class="w-[300px] md:w-[350px] p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex-shrink-0 hover:bg-white/10 hover:border-behard-yellow/30 transition-all cursor-default"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden border-2 border-behard-yellow"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 class="text-white font-bold">Beta Tester #033</h4>
+                  <span class="text-behard-light/50 text-xs block"
+                    >Perfil: Avançado</span
+                  >
+                </div>
+                <div
+                  class="ml-auto bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  Foco
+                </div>
+              </div>
+              <p class="text-behard-light/70 text-sm whitespace-normal">
+                "A parte de mentalidade é o diferencial. Não é só levantar peso,
+                é construir consistência."
+              </p>
             </div>
           </div>
         </div>
@@ -1192,12 +1172,22 @@
               </p>
             </video>
           </div>
+
+          <!-- NEW CTA: After Video -->
+          <div class="text-center mt-10 reveal">
+            <a
+              href="#motivation"
+              class="ripple-btn inline-block px-10 py-4 rounded-full bg-behard-yellow text-behard-dark font-bold text-lg hover:bg-white transition-all shadow-lg transform hover:-translate-y-1"
+            >
+              Quero treinar com inteligência
+            </a>
+          </div>
         </div>
       </section>
 
-      <!-- Story/Origin Section -->
+      <!-- DNA INTERACTIVE SECTION - NEW -->
       <section
-        id="origin-story"
+        id="dna-section"
         class="py-24 px-4 md:px-8 bg-[#24003A] relative overflow-hidden"
       >
         <!-- Decorative background elements -->
@@ -1208,181 +1198,157 @@
           class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none"
         ></div>
 
-        <div class="container mx-auto max-w-6xl relative z-10">
-          <div class="reveal text-center mb-20">
+        <div class="container mx-auto max-w-7xl relative z-10">
+          <div class="reveal text-center mb-16">
             <span
               class="text-behard-yellow text-sm font-bold tracking-[0.2em] uppercase mb-2 block"
               >Nossa História</span
             >
             <h2 class="text-3xl md:text-4xl font-bold text-white">
-              Por que o <span class="text-behard-yellow">BeHard</span> existe?
+              O DNA <span class="text-behard-yellow">BeHard</span>
             </h2>
+            <p class="text-white/50 mt-4 text-sm md:text-base">
+              Passe o mouse (ou toque) nos pontos para decodificar.
+            </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            <!-- Item 1: O Problema -->
-            <div class="reveal group h-full">
-              <div
-                class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col"
+          <div
+            class="reveal flex flex-col md:flex-row items-center justify-center gap-12 lg:gap-24"
+          >
+            <!-- Left: Interactive DNA SVG -->
+            <div
+              class="relative w-full max-w-[200px] md:max-w-[250px] h-[500px] flex justify-center"
+            >
+              <svg
+                viewBox="0 0 100 400"
+                class="h-full w-full overflow-visible drop-shadow-[0_0_15px_rgba(242,183,5,0.3)] animate-float"
               >
-                <!-- Placeholder Image for Card -->
-                <div
-                  class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5"
-                >
-                  <img
-                    src="https://images.unsplash.com/photo-1599552683573-9dc48255b7ef?q=80&w=600&auto=format&fit=crop"
-                    alt="O Problema"
-                    class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500"
-                  />
-                  <div
-                    class="absolute inset-0 flex items-center justify-center pointer-events-none"
-                  >
-                    <span
-                      class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm"
-                      >Imagem Problema</span
-                    >
-                  </div>
-                </div>
+                <!-- Connecting Rungs -->
+                <line x1="30" y1="50" x2="70" y2="50" class="dna-connector" />
+                <line x1="30" y1="150" x2="70" y2="150" class="dna-connector" />
+                <line x1="30" y1="250" x2="70" y2="250" class="dna-connector" />
+                <line x1="30" y1="350" x2="70" y2="350" class="dna-connector" />
 
-                <div class="flex items-center gap-4 mb-4">
-                  <div
-                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 group-hover:text-behard-yellow transition-colors duration-300"
-                  >
-                    <i data-lucide="cloud-fog" class="w-6 h-6"></i>
-                  </div>
-                  <h3 class="text-2xl font-bold text-white">
-                    O Problema: Ruído
-                  </h3>
-                </div>
-                <p class="text-behard-light/70 leading-relaxed text-base">
-                  Identificamos um padrão recorrente: pessoas motivadas
-                  desistindo devido à falta de clareza. O excesso de informações
-                  contraditórias gera ansiedade e falta de direção.
-                </p>
-              </div>
+                <!-- Strand 1 (Sine Wave) -->
+                <path
+                  d="M30,0 Q70,50 30,100 T30,200 T30,300 T30,400"
+                  stroke="#6818A5"
+                  class="dna-path"
+                />
+
+                <!-- Strand 2 (Cosine Wave) -->
+                <path
+                  d="M70,0 Q30,50 70,100 T70,200 T70,300 T70,400"
+                  stroke="#F2B705"
+                  class="dna-path"
+                />
+
+                <!-- Interactive Nodes -->
+                <!-- Node 1: Ruído -->
+                <circle
+                  cx="30"
+                  cy="50"
+                  r="6"
+                  class="dna-node"
+                  data-step="noise"
+                >
+                  <animate
+                    attributeName="r"
+                    values="6;8;6"
+                    dur="3s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+
+                <!-- Node 2: Diagnóstico -->
+                <circle
+                  cx="70"
+                  cy="150"
+                  r="6"
+                  class="dna-node"
+                  data-step="diagnosis"
+                >
+                  <animate
+                    attributeName="r"
+                    values="6;8;6"
+                    dur="3s"
+                    begin="1s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+
+                <!-- Node 3: Propósito -->
+                <circle
+                  cx="30"
+                  cy="250"
+                  r="6"
+                  class="dna-node"
+                  data-step="purpose"
+                >
+                  <animate
+                    attributeName="r"
+                    values="6;8;6"
+                    dur="3s"
+                    begin="2s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+
+                <!-- Node 4: Solução -->
+                <circle
+                  cx="70"
+                  cy="350"
+                  r="6"
+                  class="dna-node"
+                  data-step="solution"
+                >
+                  <animate
+                    attributeName="r"
+                    values="6;8;6"
+                    dur="3s"
+                    begin="0.5s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </svg>
             </div>
 
-            <!-- Item 2: O Diagnóstico -->
-            <div class="reveal group h-full" style="transition-delay: 150ms">
+            <!-- Right: Info Panel (Modal-like) -->
+            <div class="w-full max-w-md min-h-[250px] relative">
+              <!-- Glassmorphism Card -->
               <div
-                class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col"
+                id="dna-info-card"
+                class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:border-behard-yellow/30 shadow-2xl"
               >
-                <!-- Placeholder Image for Card -->
+                <!-- Dynamic Content Container -->
                 <div
-                  class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5"
+                  id="dna-content"
+                  class="dna-info-panel fade-in relative z-10"
                 >
-                  <img
-                    src="https://images.unsplash.com/photo-1550345332-09e3ac987658?q=80&w=600&auto=format&fit=crop"
-                    alt="O Diagnóstico"
-                    class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500"
-                  />
-                  <div
-                    class="absolute inset-0 flex items-center justify-center pointer-events-none"
-                  >
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow"
+                    >
+                      <i data-lucide="dna" class="w-6 h-6"></i>
+                    </div>
                     <span
-                      class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm"
-                      >Imagem Diagnóstico</span
+                      class="text-xs font-bold uppercase tracking-widest text-white/50"
+                      >Explore o DNA</span
                     >
                   </div>
-                </div>
-
-                <div class="flex items-center gap-4 mb-4">
-                  <div
-                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 group-hover:text-behard-yellow transition-colors duration-300"
-                  >
-                    <i data-lucide="eye" class="w-6 h-6"></i>
-                  </div>
-                  <h3 class="text-2xl font-bold text-white">O Diagnóstico</h3>
-                </div>
-                <p class="text-behard-light/70 leading-relaxed text-base">
-                  A falha geralmente não está na falta de vontade, mas na
-                  ausência de estrutura. Sem um plano adaptável, qualquer rotina
-                  se torna frágil diante de imprevistos.
-                </p>
-              </div>
-            </div>
-
-            <!-- Item 3: O Propósito -->
-            <div class="reveal group h-full" style="transition-delay: 300ms">
-              <div
-                class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col"
-              >
-                <!-- Placeholder Image for Card -->
-                <div
-                  class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5"
-                >
-                  <img
-                    src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=600&auto=format&fit=crop"
-                    alt="O Propósito"
-                    class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500"
-                  />
-                  <div
-                    class="absolute inset-0 flex items-center justify-center pointer-events-none"
-                  >
-                    <span
-                      class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm"
-                      >Imagem Propósito</span
-                    >
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-4 mb-4">
-                  <div
-                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 group-hover:text-behard-yellow transition-colors duration-300"
-                  >
-                    <i data-lucide="target" class="w-6 h-6"></i>
-                  </div>
-                  <h3 class="text-2xl font-bold text-white">
-                    O Propósito BeHard
+                  <h3 class="text-2xl font-bold text-white mb-3">
+                    Conexão BeHard
                   </h3>
+                  <p class="text-behard-light/80 leading-relaxed">
+                    Nossa metodologia é viva. Interaja com a estrutura ao lado
+                    para entender como conectamos ciência e prática.
+                  </p>
                 </div>
-                <p class="text-behard-light/70 leading-relaxed text-base">
-                  Desenvolvemos uma abordagem focada em eficiência. Conectamos a
-                  ciência esportiva à rotina de quem trabalha e estuda, tornando
-                  a manutenção da saúde viável.
-                </p>
-              </div>
-            </div>
 
-            <!-- Item 4: A Execução -->
-            <div class="reveal group h-full" style="transition-delay: 450ms">
-              <div
-                class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 hover:border-behard-yellow/30 transition-all duration-300 h-full relative overflow-hidden flex flex-col"
-              >
-                <!-- Placeholder Image for Card -->
+                <!-- Decorative background glow -->
                 <div
-                  class="w-full h-48 rounded-2xl mb-6 bg-black/40 overflow-hidden relative border border-white/5"
-                >
-                  <img
-                    src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?q=80&w=600&auto=format&fit=crop"
-                    alt="A Execução"
-                    class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500"
-                  />
-                  <div
-                    class="absolute inset-0 flex items-center justify-center pointer-events-none"
-                  >
-                    <span
-                      class="text-xs font-bold uppercase tracking-widest text-white/40 border border-white/20 px-2 py-1 rounded backdrop-blur-sm"
-                      >Imagem App</span
-                    >
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-4 mb-4">
-                  <div
-                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent border border-white/5 flex items-center justify-center text-white/80 group-hover:text-behard-yellow transition-colors duration-300"
-                  >
-                    <i data-lucide="brain-circuit" class="w-6 h-6"></i>
-                  </div>
-                  <h3 class="text-2xl font-bold text-white">
-                    Ecossistema de Hábitos
-                  </h3>
-                </div>
-                <p class="text-behard-light/70 leading-relaxed text-base">
-                  Mais que um app de treinos, criamos uma ferramenta de gestão
-                  de estilo de vida. A tecnologia adapta o planejamento para
-                  garantir a aderência a longo prazo.
-                </p>
+                  class="absolute -bottom-10 -right-10 w-32 h-32 bg-behard-yellow/10 rounded-full blur-2xl pointer-events-none"
+                ></div>
               </div>
             </div>
           </div>
@@ -1417,10 +1383,8 @@
               <!-- Tooltip Element Removed as requested -->
 
               <svg
-                width="300"
-                height="500"
                 viewBox="0 0 300 500"
-                class="drop-shadow-2xl z-10 animate-float"
+                class="w-full h-auto max-w-[300px] drop-shadow-2xl z-10 animate-float"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <!-- Defs for reuse if needed -->
@@ -1567,6 +1531,16 @@
             <p class="text-base text-behard-light/60">
               O foco é funcionalidade, saúde metabólica e bem-estar mental.
             </p>
+
+            <!-- NEW CTA: Evolution Section -->
+            <div class="mt-8">
+              <a
+                href="#simulator"
+                class="ripple-btn inline-block px-8 py-3 rounded-full border-2 border-behard-yellow text-behard-yellow font-bold hover:bg-behard-yellow hover:text-behard-dark transition-all"
+              >
+                Definir meus objetivos
+              </a>
+            </div>
           </div>
 
           <div
@@ -1909,42 +1883,6 @@
         </div>
       </section>
 
-      <!-- New Lifestyle/Parallax Break Section -->
-      <section
-        id="lifestyle-break"
-        class="py-20 relative h-[500px] flex items-center justify-center overflow-hidden"
-      >
-        <!-- Full Width Image Placeholder -->
-        <div class="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1434596922112-19c563067271?q=80&w=1920&auto=format&fit=crop"
-            alt="Lifestyle BeHard"
-            class="w-full h-full object-cover opacity-30"
-          />
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-behard-dark via-transparent to-behard-dark"
-          ></div>
-        </div>
-
-        <div class="relative z-10 container mx-auto text-center px-4">
-          <div class="reveal">
-            <h2
-              class="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4"
-            >
-              Supere seus
-              <span
-                class="text-transparent bg-clip-text bg-gradient-to-r from-behard-yellow to-white"
-                >Limites</span
-              >
-            </h2>
-            <p class="text-xl text-behard-light/80 max-w-2xl mx-auto">
-              Não é apenas sobre estética. É sobre construir a mentalidade de
-              quem não desiste.
-            </p>
-          </div>
-        </div>
-      </section>
-
       <!-- Mindset Section (New) -->
       <section
         id="mindset"
@@ -2039,6 +1977,17 @@
                 </p>
               </div>
             </div>
+          </div>
+
+          <!-- NEW CTA: After Mindset Grid -->
+          <div class="mt-12 text-center reveal">
+            <a
+              href="#motivation"
+              class="ripple-btn inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white/10 border border-white/20 hover:bg-behard-yellow hover:text-behard-dark hover:border-behard-yellow transition-all font-bold text-white"
+            >
+              <i data-lucide="zap" class="w-5 h-5"></i>
+              Desbloquear meu potencial
+            </a>
           </div>
         </div>
       </section>
@@ -2140,305 +2089,257 @@
       </div>
     </footer>
 
-    <script type="module">
-      // Initialize Icons
-      lucide.createIcons();
-
-      // Navbar Scroll Logic
-      const navbar = document.getElementById("navbar");
-      let isMenuOpen = false; // Define state globally
-
-      function updateNavbarStyle() {
-        if (!navbar) return;
-
-        // Se o menu estiver aberto, queremos que a navbar fique transparente (para ver o menu por baixo)
-        // mas o botão ainda fique visível.
-        if (isMenuOpen) {
-          // Alterado py-4 para py-3 e py-6 para py-5 para manter consistência com o tamanho menor
-          navbar.classList.remove(
-            "bg-behard-dark/90",
-            "backdrop-blur-md",
-            "shadow-lg",
-            "py-3",
-          );
-          navbar.classList.add("bg-transparent", "py-5");
-          return;
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // 1. Initialize Icons Safely
+        if (window.lucide) {
+          lucide.createIcons();
         }
 
-        // Comportamento normal de scroll
-        if (window.scrollY > 50) {
-          // Alterado py-4 para py-3 para ser mais compacto ao rolar
-          navbar.classList.add(
-            "bg-behard-dark/90",
-            "backdrop-blur-md",
-            "shadow-lg",
-            "py-3",
-          );
-          navbar.classList.remove("bg-transparent", "py-5");
-        } else {
-          // Alterado py-6 para py-5 para o tamanho padrão inicial
-          navbar.classList.remove(
-            "bg-behard-dark/90",
-            "backdrop-blur-md",
-            "shadow-lg",
-            "py-3",
-          );
-          navbar.classList.add("bg-transparent", "py-5");
-        }
-      }
+        // Navbar Scroll Logic
+        const navbar = document.getElementById("navbar");
+        let isMenuOpen = false;
 
-      window.addEventListener("scroll", updateNavbarStyle);
-
-      // Mobile Menu Logic
-      const menuBtn = document.getElementById("mobile-menu-btn");
-      const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
-      const mobileMenuBackdrop = document.getElementById(
-        "mobile-menu-backdrop",
-      );
-      const mobileMenuPanel = document.getElementById("mobile-menu-panel");
-      const iconMenu = document.getElementById("icon-menu");
-      const iconClose = document.getElementById("icon-close");
-
-      function toggleMenu() {
-        if (
-          !mobileMenuOverlay ||
-          !iconMenu ||
-          !iconClose ||
-          !mobileMenuPanel ||
-          !mobileMenuBackdrop
-        )
-          return;
-
-        isMenuOpen = !isMenuOpen;
-
-        // Atualiza estilo da navbar imediatamente
-        updateNavbarStyle();
-
-        if (isMenuOpen) {
-          // Show Overlay container
-          mobileMenuOverlay.classList.remove(
-            "invisible",
-            "pointer-events-none",
-          );
-
-          // Fade in backdrop
-          setTimeout(() => {
-            mobileMenuBackdrop.classList.remove("opacity-0");
-            mobileMenuBackdrop.classList.add("opacity-100");
-          }, 10);
-
-          // Slide in Panel
-          setTimeout(() => {
-            mobileMenuPanel.classList.remove("translate-x-full");
-            mobileMenuPanel.classList.add("translate-x-0");
-          }, 10);
-
-          iconMenu.classList.add("hidden");
-          iconClose.classList.remove("hidden");
-          document.body.style.overflow = "hidden"; // Lock scroll
-        } else {
-          // Slide out Panel
-          mobileMenuPanel.classList.remove("translate-x-0");
-          mobileMenuPanel.classList.add("translate-x-full");
-
-          // Fade out backdrop
-          mobileMenuBackdrop.classList.remove("opacity-100");
-          mobileMenuBackdrop.classList.add("opacity-0");
-
-          // Hide overlay after transition
-          setTimeout(() => {
-            mobileMenuOverlay.classList.add("invisible", "pointer-events-none");
-          }, 300);
-
-          iconMenu.classList.remove("hidden");
-          iconClose.classList.add("hidden");
-          document.body.style.overflow = ""; // Unlock scroll
-        }
-      }
-
-      if (menuBtn) {
-        menuBtn.addEventListener("click", toggleMenu);
-      }
-
-      // Close menu when clicking outside (on backdrop)
-      if (mobileMenuBackdrop) {
-        mobileMenuBackdrop.addEventListener("click", () => {
-          if (isMenuOpen) toggleMenu();
-        });
-      }
-
-      // Smooth Scroll & Close Menu on Link Click
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-
-          // Close mobile menu if open
-          if (isMenuOpen) toggleMenu();
-
-          const targetId = this.getAttribute("href");
-          if (!targetId) return;
-
-          const targetElement = document.querySelector(targetId);
-
-          if (targetElement) {
-            const navHeight = 80;
-            const elementPosition =
-              targetElement.getBoundingClientRect().top + window.scrollY;
-            const offsetPosition = elementPosition - navHeight;
-
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: "smooth",
-            });
+        function updateNavbarStyle() {
+          if (!navbar) return;
+          if (isMenuOpen) {
+            navbar.classList.remove(
+              "bg-behard-dark/90",
+              "backdrop-blur-md",
+              "shadow-lg",
+              "py-3",
+            );
+            navbar.classList.add("bg-transparent", "py-5");
+            return;
           }
-        });
-      });
-
-      // Scroll Reveal Animation (Intersection Observer)
-      const observerOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px",
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-            observer.unobserve(entry.target);
+          if (window.scrollY > 50) {
+            navbar.classList.add(
+              "bg-behard-dark/90",
+              "backdrop-blur-md",
+              "shadow-lg",
+              "py-3",
+            );
+            navbar.classList.remove("bg-transparent", "py-5");
+          } else {
+            navbar.classList.remove(
+              "bg-behard-dark/90",
+              "backdrop-blur-md",
+              "shadow-lg",
+              "py-3",
+            );
+            navbar.classList.add("bg-transparent", "py-5");
           }
-        });
-      }, observerOptions);
+        }
+        window.addEventListener("scroll", updateNavbarStyle);
 
-      document.querySelectorAll(".reveal").forEach((el) => {
-        observer.observe(el);
-      });
+        // STICKY CTA LOGIC
+        const stickyCta = document.getElementById("sticky-cta");
+        function toggleStickyCta() {
+          if (!stickyCta) return;
+          if (window.scrollY > 500) {
+            stickyCta.classList.remove("hidden-cta");
+            stickyCta.classList.add("visible-cta");
+          } else {
+            stickyCta.classList.remove("visible-cta");
+            stickyCta.classList.add("hidden-cta");
+          }
+        }
+        window.addEventListener("scroll", toggleStickyCta);
 
-      // Progress Bar Animation Observer
-      const progressObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const bar = entry.target;
-              const width = bar.getAttribute("data-width");
-              if (width) bar.style.width = width;
-              progressObserver.unobserve(bar);
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById("mobile-menu-btn");
+        const mobileMenuOverlay = document.getElementById(
+          "mobile-menu-overlay",
+        );
+        const mobileMenuBackdrop = document.getElementById(
+          "mobile-menu-backdrop",
+        );
+        const mobileMenuPanel = document.getElementById("mobile-menu-panel");
+        const iconMenu = document.getElementById("icon-menu");
+        const iconClose = document.getElementById("icon-close");
+
+        function toggleMenu() {
+          if (!mobileMenuOverlay) return;
+          isMenuOpen = !isMenuOpen;
+          updateNavbarStyle();
+
+          if (isMenuOpen) {
+            mobileMenuOverlay.classList.remove(
+              "invisible",
+              "pointer-events-none",
+            );
+            setTimeout(
+              () =>
+                mobileMenuBackdrop.classList.replace(
+                  "opacity-0",
+                  "opacity-100",
+                ),
+              10,
+            );
+            setTimeout(
+              () =>
+                mobileMenuPanel.classList.replace(
+                  "translate-x-full",
+                  "translate-x-0",
+                ),
+              10,
+            );
+            iconMenu.classList.add("hidden");
+            iconClose.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+          } else {
+            mobileMenuPanel.classList.replace(
+              "translate-x-0",
+              "translate-x-full",
+            );
+            mobileMenuBackdrop.classList.replace("opacity-100", "opacity-0");
+            setTimeout(
+              () =>
+                mobileMenuOverlay.classList.add(
+                  "invisible",
+                  "pointer-events-none",
+                ),
+              300,
+            );
+            iconMenu.classList.remove("hidden");
+            iconClose.classList.add("hidden");
+            document.body.style.overflow = "";
+          }
+        }
+        if (menuBtn) menuBtn.addEventListener("click", toggleMenu);
+        if (mobileMenuBackdrop)
+          mobileMenuBackdrop.addEventListener("click", () => {
+            if (isMenuOpen) toggleMenu();
+          });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (isMenuOpen) toggleMenu();
+            const targetId = this.getAttribute("href");
+            if (!targetId) return;
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              const navHeight = 80;
+              const elementPosition =
+                targetElement.getBoundingClientRect().top + window.scrollY;
+              window.scrollTo({
+                top: elementPosition - navHeight,
+                behavior: "smooth",
+              });
             }
           });
-        },
-        { threshold: 0.5 },
-      );
+        });
 
-      document.querySelectorAll(".progress-bar-fill").forEach((el) => {
-        progressObserver.observe(el);
-      });
+        // 2. Safe Reveal Animation Logic
+        const revealElements = document.querySelectorAll(".reveal");
 
-      // Ripple Effect Logic
-      function createRipple(event) {
-        const button = event.currentTarget;
+        // Apply hidden state immediately via JS so if JS fails, they stay visible (from CSS default)
+        revealElements.forEach((el) => el.classList.add("reveal-pending"));
 
-        // Create span for ripple
-        const circle = document.createElement("span");
-        const diameter = Math.max(button.clientWidth, button.clientHeight);
-        const radius = diameter / 2;
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.remove("reveal-pending");
+                entry.target.classList.add("active");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.15, rootMargin: "0px 0px -50px 0px" },
+        );
 
-        // Get click position relative to button
-        const rect = button.getBoundingClientRect();
+        revealElements.forEach((el) => observer.observe(el));
 
-        circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${event.clientX - rect.left - radius}px`;
-        circle.style.top = `${event.clientY - rect.top - radius}px`;
-        circle.classList.add("ripple");
+        // Progress Bar Observer
+        const progressObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const bar = entry.target;
+                const width = bar.getAttribute("data-width");
+                if (width) bar.style.width = width;
+                progressObserver.unobserve(bar);
+              }
+            });
+          },
+          { threshold: 0.5 },
+        );
+        document
+          .querySelectorAll(".progress-bar-fill")
+          .forEach((el) => progressObserver.observe(el));
 
-        // Remove existing ripple to prevent DOM clutter
-        const existingRipple = button.getElementsByClassName("ripple")[0];
-        if (existingRipple) {
-          existingRipple.remove();
+        // Ripple Effect
+        function createRipple(event) {
+          const button = event.currentTarget;
+          const circle = document.createElement("span");
+          const diameter = Math.max(button.clientWidth, button.clientHeight);
+          const radius = diameter / 2;
+          const rect = button.getBoundingClientRect();
+          circle.style.width = circle.style.height = `${diameter}px`;
+          circle.style.left = `${event.clientX - rect.left - radius}px`;
+          circle.style.top = `${event.clientY - rect.top - radius}px`;
+          circle.classList.add("ripple");
+          const existingRipple = button.getElementsByClassName("ripple")[0];
+          if (existingRipple) existingRipple.remove();
+          button.appendChild(circle);
         }
+        document
+          .querySelectorAll(".ripple-btn")
+          .forEach((btn) => btn.addEventListener("click", createRipple));
 
-        button.appendChild(circle);
-      }
-
-      // Attach ripple to all buttons with class 'ripple-btn'
-      const rippleButtons = document.querySelectorAll(".ripple-btn");
-      rippleButtons.forEach((btn) => {
-        btn.addEventListener("click", createRipple);
-      });
-
-      // Phone Screen Carousel Logic
-      document.addEventListener("DOMContentLoaded", () => {
+        // Phone Screen Carousel
         const screens = document.querySelectorAll(".phone-screen");
         const dots = document.querySelectorAll(".screen-dot");
         let currentScreen = 0;
-        const intervalTime = 3500; // 3.5 seconds
-
         setInterval(() => {
           if (screens.length === 0 || dots.length === 0) return;
-
-          // Remove active from current
-          screens[currentScreen]?.classList.remove("active");
-          screens[currentScreen]?.classList.add("inactive");
-          dots[currentScreen]?.classList.remove("opacity-100");
-          dots[currentScreen]?.classList.add("opacity-40");
-
-          // Update index
+          screens[currentScreen]?.classList.replace("active", "inactive");
+          dots[currentScreen]?.classList.replace("opacity-100", "opacity-40");
           currentScreen = (currentScreen + 1) % screens.length;
+          screens[currentScreen]?.classList.replace("inactive", "active");
+          dots[currentScreen]?.classList.replace("opacity-40", "opacity-100");
+        }, 3500);
 
-          // Add active to next
-          screens[currentScreen]?.classList.remove("inactive");
-          screens[currentScreen]?.classList.add("active");
-          dots[currentScreen]?.classList.remove("opacity-40");
-          dots[currentScreen]?.classList.add("opacity-100");
-        }, intervalTime);
-      });
+        // Interactive Body Map Logic
+        const bodyData = {
+          "zone-head": {
+            title: "Mentalidade & Disciplina",
+            desc: "O treino começa na mente. Conteúdos focados em disciplina e consistência comportamental.",
+            icon: "brain-circuit",
+            color: "#A855F7",
+          },
+          "zone-chest": {
+            title: "Condicionamento Metabólico",
+            desc: "Melhore sua capacidade cardiorrespiratória para otimizar sua energia diária e saúde cardiovascular.",
+            icon: "heart-pulse",
+            color: "#EF4444",
+          },
+          "zone-abs": {
+            title: "Core & Estabilidade",
+            desc: "Fortalecimento do centro do corpo para garantir postura adequada e prevenção de dores lombares.",
+            icon: "clipboard-list",
+            color: "#22C55E",
+          },
+          "zone-arms": {
+            title: "Força Funcional",
+            desc: "Exercícios que transferem força para atividades reais do dia a dia.",
+            icon: "dumbbell",
+            color: "#F2B705",
+          },
+        };
+        const muscleGroups = document.querySelectorAll(".muscle-group");
+        const cardContent = document.getElementById("card-content");
+        const infoCard = document.getElementById("info-card");
 
-      // Interactive Body Logic
-      const bodyData = {
-        "zone-head": {
-          title: "Mentalidade & Disciplina",
-          desc: "O treino começa na mente. Conteúdos focados em disciplina e consistência comportamental.",
-          icon: "brain-circuit",
-          color: "#A855F7", // Purple
-          short: "Foco e Disciplina",
-        },
-        "zone-chest": {
-          title: "Condicionamento Metabólico",
-          desc: "Melhore sua capacidade cardiorrespiratória para otimizar sua energia diária e saúde cardiovascular.",
-          icon: "heart-pulse",
-          color: "#EF4444", // Red
-          short: "Cardio e Resistência",
-        },
-        "zone-abs": {
-          title: "Core & Estabilidade",
-          desc: "Fortalecimento do centro do corpo para garantir postura adequada e prevenção de dores lombares.",
-          icon: "clipboard-list",
-          color: "#22C55E", // Green
-          short: "Postura e Core",
-        },
-        "zone-arms": {
-          title: "Força Funcional",
-          desc: "Exercícios multiarticulares que transferem força para atividades reais do dia a dia.",
-          icon: "dumbbell",
-          color: "#F2B705", // Yellow
-          short: "Força e Potência",
-        },
-      };
-
-      const muscleGroups = document.querySelectorAll(".muscle-group");
-      const cardContent = document.getElementById("card-content");
-      const infoCard = document.getElementById("info-card");
-
-      // Tooltip Elements Removed (tooltip, tooltipTitle, tooltipDesc)
-
-      function updateCard(zoneId) {
-        const data = bodyData[zoneId];
-        if (!data) return;
-
-        // Fade out
-        cardContent.style.opacity = "0";
-
-        setTimeout(() => {
-          // Update HTML
-          cardContent.innerHTML = `
+        function updateCard(zoneId) {
+          const data = bodyData[zoneId];
+          if (!data) return;
+          cardContent.style.opacity = "0";
+          setTimeout(() => {
+            cardContent.innerHTML = `
                     <div class="flex items-center gap-4 mb-4">
                         <div class="p-3 rounded-lg bg-white/10 text-[${data.color}] shadow-lg border border-white/5">
                             <i data-lucide="${data.icon}" class="w-8 h-8" style="color: ${data.color}"></i>
@@ -2448,170 +2349,199 @@
                     <h3 class="text-3xl font-bold text-white mb-3">${data.title}</h3>
                     <p class="text-behard-light/90 text-lg leading-relaxed">${data.desc}</p>
                 `;
-
-          // Re-initialize icons for the new content
-          lucide.createIcons();
-
-          // Fade in
-          cardContent.style.opacity = "1";
-          infoCard.style.borderColor = data.color;
-          infoCard.style.boxShadow = `0 0 30px ${data.color}20`;
-        }, 300);
-      }
-
-      // Add event listeners to muscle groups
-      muscleGroups.forEach((group) => {
-        const zoneId = group.id || group.dataset.ref;
-        const data = bodyData[zoneId];
-
-        // REMOVIDO: Listeners de mouseenter, mousemove e mouseleave para tooltip
-
-        // 1. Click: Activate and Update Card (Mantido)
-        group.addEventListener("click", (e) => {
-          e.preventDefault();
-
-          // Remove active from all
-          muscleGroups.forEach((g) => g.classList.remove("active"));
-
-          // Add active to current (and related parts like arms)
-          if (zoneId) {
-            document
-              .querySelectorAll(`#${zoneId}, [data-ref="${zoneId}"]`)
-              .forEach((el) => el.classList.add("active"));
-            updateCard(zoneId);
-          }
-        });
-      });
-
-      // ROUTINE SIMULATOR LOGIC
-      const userSelections = {
-        objective: "",
-        level: "",
-        time: "",
-      };
-
-      window.selectOption = function (step, value) {
-        if (step === 1) userSelections.objective = value;
-        if (step === 2) userSelections.level = value;
-        if (step === 3) userSelections.time = value;
-
-        const current = document.getElementById(`sim-step-${step}`);
-        const next = document.getElementById(`sim-step-${step + 1}`);
-        const result = document.getElementById("sim-result");
-
-        if (current) {
-          current.classList.remove("active");
-          current.classList.add("prev");
+            if (window.lucide) lucide.createIcons();
+            cardContent.style.opacity = "1";
+            infoCard.style.borderColor = data.color;
+            infoCard.style.boxShadow = `0 0 30px ${data.color}20`;
+          }, 300);
         }
+        muscleGroups.forEach((group) => {
+          const zoneId = group.id || group.dataset.ref;
+          group.addEventListener("click", (e) => {
+            e.preventDefault();
+            muscleGroups.forEach((g) => g.classList.remove("active"));
+            if (zoneId) {
+              document
+                .querySelectorAll(`#${zoneId}, [data-ref="${zoneId}"]`)
+                .forEach((el) => el.classList.add("active"));
+              updateCard(zoneId);
+            }
+          });
+        });
 
-        if (step < 3) {
-          if (next) {
-            next.classList.remove("next");
-            next.classList.add("active");
+        // Routine Simulator Logic
+        const userSelections = { objective: "", level: "", time: "" };
+        window.selectOption = function (step, value) {
+          if (step === 1) userSelections.objective = value;
+          if (step === 2) userSelections.level = value;
+          if (step === 3) userSelections.time = value;
+
+          const current = document.getElementById(`sim-step-${step}`);
+          const next = document.getElementById(`sim-step-${step + 1}`);
+          const result = document.getElementById("sim-result");
+
+          if (current) {
+            current.classList.remove("active");
+            current.classList.add("prev");
           }
-        } else {
-          // Show result
-          generateResult();
+
+          if (step < 3) {
+            if (next) {
+              next.classList.remove("next");
+              next.classList.add("active");
+            }
+          } else {
+            generateResult();
+            if (result) {
+              result.classList.remove("hidden");
+              result.classList.add("active");
+            }
+          }
+        };
+        window.prevStep = function (step) {
+          const current = document.getElementById(`sim-step-${step}`);
+          const prev = document.getElementById(`sim-step-${step - 1}`);
+          if (current) {
+            current.classList.remove("active");
+            current.classList.add("next");
+          }
+          if (prev) {
+            prev.classList.remove("prev");
+            prev.classList.add("active");
+          }
+        };
+        function generateResult() {
+          let title = "Protocolo Personalizado";
+          if (userSelections.objective === "emagrecer")
+            title = "Protocolo de Redução de Gordura";
+          else if (userSelections.objective === "massa")
+            title = "Protocolo de Hipertrofia Estruturada";
+          else title = "Protocolo de Bem-Estar e Longevidade";
+          if (userSelections.level === "iniciante")
+            title += " (Fase de Adaptação)";
+          else if (userSelections.level === "avancado")
+            title += " (Fase Avançada)";
+          const titleEl = document.getElementById("result-title");
+          const timeEl = document.getElementById("result-time");
+          if (titleEl) titleEl.innerText = title;
+          if (timeEl) timeEl.innerText = userSelections.time;
+          if (window.lucide) lucide.createIcons();
+        }
+        window.resetSimulator = function () {
+          const result = document.getElementById("sim-result");
+          const step1 = document.getElementById("sim-step-1");
+          const step2 = document.getElementById("sim-step-2");
+          const step3 = document.getElementById("sim-step-3");
           if (result) {
-            result.classList.remove("hidden");
-            result.classList.add("active");
+            result.classList.remove("active");
+            result.classList.add("hidden");
           }
-        }
-      };
+          if (step3) step3.classList.remove("prev");
+          [step1, step2, step3].forEach((el) => {
+            if (el) el.classList.remove("active", "prev", "next");
+          });
+          if (step1) step1.classList.add("active");
+          if (step2) step2.classList.add("next");
+          if (step3) step3.classList.add("next");
+          userSelections.objective = "";
+          userSelections.level = "";
+          userSelections.time = "";
+        };
 
-      window.prevStep = function (step) {
-        const current = document.getElementById(`sim-step-${step}`);
-        const prev = document.getElementById(`sim-step-${step - 1}`);
-
-        if (current) {
-          current.classList.remove("active");
-          current.classList.add("next");
-        }
-
-        if (prev) {
-          prev.classList.remove("prev");
-          prev.classList.add("active");
-        }
-      };
-
-      function generateResult() {
-        let title = "Protocolo Personalizado";
-
-        // Simple logic for demo title
-        if (userSelections.objective === "emagrecer") {
-          title = "Protocolo de Redução de Gordura";
-        } else if (userSelections.objective === "massa") {
-          title = "Protocolo de Hipertrofia Estruturada";
-        } else {
-          title = "Protocolo de Bem-Estar e Longevidade";
-        }
-
-        if (userSelections.level === "iniciante") {
-          title += " (Fase de Adaptação)";
-        } else if (userSelections.level === "avancado") {
-          title += " (Fase Avançada)";
-        }
-
-        const titleEl = document.getElementById("result-title");
-        const timeEl = document.getElementById("result-time");
-        if (titleEl) titleEl.innerText = title;
-        if (timeEl) timeEl.innerText = userSelections.time;
-
-        lucide.createIcons();
-      }
-
-      window.resetSimulator = function () {
-        const result = document.getElementById("sim-result");
-        const step1 = document.getElementById("sim-step-1");
-        const step2 = document.getElementById("sim-step-2");
-        const step3 = document.getElementById("sim-step-3");
-
-        if (result) {
-          result.classList.remove("active");
-          result.classList.add("hidden");
-        }
-
-        if (step3) step3.classList.remove("prev");
-
-        [step1, step2, step3].forEach((el) => {
-          if (el) el.classList.remove("active", "prev", "next");
+        // Flip Card Logic
+        const flipTriggers = document.querySelectorAll(".flip-trigger");
+        const flipCards = document.querySelectorAll(".flip-card");
+        flipTriggers.forEach((trigger) => {
+          trigger.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = trigger.closest(".flip-card");
+            if (card) {
+              flipCards.forEach((c) => {
+                if (c !== card) c.classList.remove("flipped");
+              });
+              card.classList.add("flipped");
+            }
+          });
+        });
+        flipCards.forEach((card) => {
+          card.addEventListener("click", () => {
+            if (card.classList.contains("flipped"))
+              card.classList.remove("flipped");
+          });
         });
 
-        // Reset positions
-        if (step1) step1.classList.add("active");
-        if (step2) step2.classList.add("next");
-        if (step3) step3.classList.add("next");
+        // DNA INTERACTIVE LOGIC
+        const dnaNodes = document.querySelectorAll(".dna-node");
+        const dnaContent = document.getElementById("dna-content");
 
-        userSelections.objective = "";
-        userSelections.level = "";
-        userSelections.time = "";
-      };
+        const dnaData = {
+          noise: {
+            title: "O Ruído",
+            text: "O excesso de informação gera paralisia. Influenciadores contraditórios e promessas milagrosas criam ansiedade, não resultados.",
+            icon: "cloud-fog",
+          },
+          diagnosis: {
+            title: "O Diagnóstico",
+            text: "Motivação sem método é falha garantida. Sem estrutura adaptável, a rotina quebra ao primeiro imprevisto. O erro não é você, é o plano.",
+            icon: "microscope",
+          },
+          purpose: {
+            title: "O Propósito",
+            text: "Democratizar a alta performance. Trazemos a ciência de elite para quem trabalha e estuda. Eficiência máxima no tempo disponível.",
+            icon: "target",
+          },
+          solution: {
+            title: "A Solução",
+            text: "Um ecossistema de hábitos. Não é apenas um app de séries, é gestão de estilo de vida, sono e longevidade.",
+            icon: "zap",
+          },
+        };
 
-      // FLIP CARD MOBILE LOGIC
-      const flipTriggers = document.querySelectorAll(".flip-trigger");
-      const flipCards = document.querySelectorAll(".flip-card");
+        function updateDnaContent(key) {
+          const data = dnaData[key];
+          if (!data || !dnaContent) return;
 
-      flipTriggers.forEach((trigger) => {
-        trigger.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation(); // Stop propagation to prevent immediate toggle back if we add listener to card
-          const card = trigger.closest(".flip-card");
-          if (card) {
-            // Remove flipped class from other cards (accordion style) - optional but good for mobile
-            flipCards.forEach((c) => {
-              if (c !== card) c.classList.remove("flipped");
-            });
-            card.classList.add("flipped");
-          }
-        });
-      });
+          // Fade out
+          dnaContent.classList.remove("fade-in");
+          dnaContent.classList.add("fade-out");
 
-      // Click anywhere on the back to flip back, or click the card to toggle off if active
-      flipCards.forEach((card) => {
-        card.addEventListener("click", (e) => {
-          if (card.classList.contains("flipped")) {
-            card.classList.remove("flipped");
-          }
+          setTimeout(() => {
+            dnaContent.innerHTML = `
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow">
+                            <i data-lucide="${data.icon}" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-white/50">Conceito Ativado</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">${data.title}</h3>
+                    <p class="text-behard-light/80 leading-relaxed">${data.text}</p>
+                `;
+            if (window.lucide) lucide.createIcons();
+
+            // Fade in
+            dnaContent.classList.remove("fade-out");
+            dnaContent.classList.add("fade-in");
+          }, 400);
+        }
+
+        dnaNodes.forEach((node) => {
+          // Hover for desktop
+          node.addEventListener("mouseenter", () => {
+            const step = node.getAttribute("data-step");
+            updateDnaContent(step);
+            dnaNodes.forEach((n) => n.classList.remove("active-node"));
+            node.classList.add("active-node");
+          });
+
+          // Click/Touch for mobile
+          node.addEventListener("click", (e) => {
+            e.preventDefault(); // prevent weird jump
+            const step = node.getAttribute("data-step");
+            updateDnaContent(step);
+            dnaNodes.forEach((n) => n.classList.remove("active-node"));
+            node.classList.add("active-node");
+          });
         });
       });
     </script>

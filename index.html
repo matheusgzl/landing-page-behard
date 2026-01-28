@@ -188,6 +188,33 @@
         transform: translateX(0);
       }
 
+      /* RESULT CONTROL Styles */
+      .result-btn {
+        transition: all 0.3s ease;
+      }
+      .result-btn.active {
+        background-color: rgba(242, 183, 5, 0.1);
+        border-color: #f2b705;
+        box-shadow: 0 0 20px rgba(242, 183, 5, 0.1);
+      }
+      .result-btn.active .icon-box {
+        background-color: #f2b705;
+        color: #310055;
+      }
+      .result-display-content {
+        transition:
+          opacity 0.4s ease,
+          transform 0.4s ease;
+      }
+      .result-display-content.fade-out {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      .result-display-content.fade-in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
       /* Phone Screen Animation */
       .phone-screen {
         transition: opacity 0.8s ease-in-out;
@@ -365,8 +392,8 @@
     <script type="importmap">
       {
         "imports": {
-          "react/": "https://esm.sh/react@^19.2.4/",
           "react": "https://esm.sh/react@^19.2.4",
+          "react/": "https://esm.sh/react@^19.2.4/",
           "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
         }
       }
@@ -418,9 +445,19 @@
             >Diferenciais</a
           >
           <a
-            href="#how-it-works"
+            href="#methodology"
             class="nav-link text-white hover:text-behard-yellow transition-colors font-medium text-sm uppercase tracking-wide"
             >Metodologia</a
+          >
+          <a
+            href="#dna-section"
+            class="nav-link text-white hover:text-behard-yellow transition-colors font-medium text-sm uppercase tracking-wide"
+            >DNA</a
+          >
+          <a
+            href="#simulator"
+            class="nav-link text-white hover:text-behard-yellow transition-colors font-medium text-sm uppercase tracking-wide"
+            >Simulador</a
           >
           <a
             href="#motivation"
@@ -481,14 +518,19 @@
           >Diferenciais</a
         >
         <a
-          href="#origin-story"
-          class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors"
-          >Origem</a
-        >
-        <a
-          href="#how-it-works"
+          href="#methodology"
           class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors"
           >Metodologia</a
+        >
+        <a
+          href="#dna-section"
+          class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors"
+          >DNA</a
+        >
+        <a
+          href="#simulator"
+          class="mobile-link text-2xl font-bold text-white hover:text-behard-yellow transition-colors"
+          >Simulador</a
         >
 
         <a
@@ -1045,6 +1087,7 @@
 
       <!-- Methodology & Recovery Section -->
       <section
+        id="methodology"
         class="py-24 px-4 md:px-8 border-y border-white/5 bg-black/30 backdrop-blur-md relative z-20"
       >
         <div class="container mx-auto">
@@ -1157,8 +1200,9 @@
             <video
               class="w-full h-full object-cover"
               controls
+              loop
               preload="metadata"
-              poster="https://images.unsplash.com/photo-1574680096141-1cddd32e04ca?q=80&w=1280&auto=format&fit=crop"
+              poster="imagens/Criação_de_Vídeo_Institucional_BeHard.mp4"
             >
               <!-- IMPORTANTE: Coloque o arquivo de vídeo na mesma pasta ou ajuste o caminho abaixo (src) -->
               <source src="imagens/Criação_de_Vídeo_Institucional_BeHard.mp4" type="video/mp4" />
@@ -1509,114 +1553,164 @@
         </div>
       </section>
 
-      <!-- User Evolution (Progress Bars) Section - UPDATED -->
+      <!-- User Evolution (Interactive Dashboard) Section - UPDATED -->
       <section
         id="evolution-progress"
         class="py-24 px-4 md:px-8 bg-black/60 border-t border-white/5"
       >
-        <div
-          class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
-        >
-          <div class="reveal">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
+        <div class="container mx-auto">
+          <div class="mb-12 text-center md:text-left reveal">
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">
               Consolide seus <br />
               <span class="text-behard-yellow">Resultados</span>
             </h2>
-            <p class="text-lg text-behard-light/80 leading-relaxed mb-6">
-              Evitamos métricas vazias e soluções paliativas. O método BeHard é
-              desenhado para a longevidade. Construa uma base sólida que
-              respeita seu tempo e seus limites, garantindo que cada treino
-              contribua para sua saúde integral.
+            <p class="text-lg text-behard-light/70">
+              Selecione um pilar para ver como construímos sua longevidade.
             </p>
-            <p class="text-base text-behard-light/60">
-              O foco é funcionalidade, saúde metabólica e bem-estar mental.
-            </p>
-
-            <!-- NEW CTA: Evolution Section -->
-            <div class="mt-8">
-              <a
-                href="#simulator"
-                class="ripple-btn inline-block px-8 py-3 rounded-full border-2 border-behard-yellow text-behard-yellow font-bold hover:bg-behard-yellow hover:text-behard-dark transition-all"
-              >
-                Definir meus objetivos
-              </a>
-            </div>
           </div>
 
           <div
-            class="reveal flex flex-col gap-6"
-            style="transition-delay: 200ms"
+            class="flex flex-col lg:flex-row gap-12 items-stretch reveal"
+            style="transition-delay: 150ms"
           >
-            <!-- Card 1: Consistência -->
+            <!-- Left: Dynamic Content Display -->
             <div
-              class="bg-white/5 hover:bg-white/10 transition-colors p-5 rounded-xl border-l-4 border-behard-yellow flex items-center gap-4 shadow-lg"
+              id="result-display"
+              class="w-full lg:w-1/2 bg-gradient-to-br from-[#310055] to-black border border-white/10 rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[400px] shadow-2xl"
             >
+              <!-- Background Icon Faded -->
               <div
-                class="bg-behard-yellow/10 p-3 rounded-lg text-behard-yellow flex-shrink-0"
+                id="result-bg-icon"
+                class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none"
               >
-                <i data-lucide="repeat" class="w-6 h-6"></i>
+                <i data-lucide="repeat" class="w-64 h-64 text-white"></i>
               </div>
-              <div>
-                <h4 class="font-bold text-white text-lg">Constância</h4>
-                <p class="text-sm text-behard-light/70">
-                  Transforme o esforço esporádico em um hábito consistente e
-                  duradouro.
+
+              <!-- Content -->
+              <div
+                id="result-content"
+                class="relative z-10 result-display-content fade-in"
+              >
+                <div
+                  class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-behard-yellow/10 border border-behard-yellow/20 text-behard-yellow font-bold text-sm mb-6"
+                >
+                  <i data-lucide="star" class="w-4 h-4"></i>
+                  <span>Pilar Fundamental</span>
+                </div>
+                <h3
+                  class="text-3xl md:text-4xl font-bold text-white mb-6"
+                  id="result-title"
+                >
+                  Constância
+                </h3>
+                <p
+                  class="text-xl text-behard-light/80 leading-relaxed mb-8"
+                  id="result-desc"
+                >
+                  Transforme o esforço esporádico em um hábito consistente. A
+                  chave não é a intensidade de um dia, mas a frequência de todos
+                  os dias.
                 </p>
+
+                <a
+                  href="#simulator"
+                  class="inline-flex items-center gap-2 text-behard-yellow font-bold hover:gap-4 transition-all"
+                >
+                  Definir meus objetivos
+                  <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
               </div>
             </div>
 
-            <!-- Card 2: Organização -->
-            <div
-              class="bg-white/5 hover:bg-white/10 transition-colors p-5 rounded-xl border-l-4 border-behard-yellow flex items-center gap-4 shadow-lg"
-            >
-              <div
-                class="bg-behard-yellow/10 p-3 rounded-lg text-behard-yellow flex-shrink-0"
+            <!-- Right: Grid of Interactive Buttons -->
+            <div class="w-full lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Btn 1 -->
+              <button
+                class="result-btn active group bg-white/5 hover:bg-white/10 p-6 rounded-2xl border border-white/10 text-left flex flex-col gap-4"
+                onclick="updateResult(0)"
               >
-                <i data-lucide="calendar-check" class="w-6 h-6"></i>
-              </div>
-              <div>
-                <h4 class="font-bold text-white text-lg">Gestão de Tempo</h4>
-                <p class="text-sm text-behard-light/70">
-                  Planejamento adaptado à sua agenda, reduzindo a fricção para o
-                  início do treino.
-                </p>
-              </div>
-            </div>
+                <div
+                  class="icon-box w-12 h-12 rounded-lg bg-white/10 text-white flex items-center justify-center transition-colors"
+                >
+                  <i data-lucide="repeat" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h4
+                    class="text-lg font-bold text-white group-hover:text-behard-yellow transition-colors"
+                  >
+                    Constância
+                  </h4>
+                  <p class="text-sm text-white/50">
+                    Hábito consistente e duradouro.
+                  </p>
+                </div>
+              </button>
 
-            <!-- Card 3: Clareza -->
-            <div
-              class="bg-white/5 hover:bg-white/10 transition-colors p-5 rounded-xl border-l-4 border-behard-yellow flex items-center gap-4 shadow-lg"
-            >
-              <div
-                class="bg-behard-yellow/10 p-3 rounded-lg text-behard-yellow flex-shrink-0"
+              <!-- Btn 2 -->
+              <button
+                class="result-btn group bg-white/5 hover:bg-white/10 p-6 rounded-2xl border border-white/10 text-left flex flex-col gap-4"
+                onclick="updateResult(1)"
               >
-                <i data-lucide="focus" class="w-6 h-6"></i>
-              </div>
-              <div>
-                <h4 class="font-bold text-white text-lg">Precisão Técnica</h4>
-                <p class="text-sm text-behard-light/70">
-                  Clareza sobre a execução e o propósito de cada movimento
-                  prescrito.
-                </p>
-              </div>
-            </div>
+                <div
+                  class="icon-box w-12 h-12 rounded-lg bg-white/10 text-white flex items-center justify-center transition-colors"
+                >
+                  <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h4
+                    class="text-lg font-bold text-white group-hover:text-behard-yellow transition-colors"
+                  >
+                    Gestão de Tempo
+                  </h4>
+                  <p class="text-sm text-white/50">
+                    Planejamento adaptado à rotina.
+                  </p>
+                </div>
+              </button>
 
-            <!-- Card 4: Recuperação -->
-            <div
-              class="bg-white/5 hover:bg-white/10 transition-colors p-5 rounded-xl border-l-4 border-behard-yellow flex items-center gap-4 shadow-lg"
-            >
-              <div
-                class="bg-behard-yellow/10 p-3 rounded-lg text-behard-yellow flex-shrink-0"
+              <!-- Btn 3 -->
+              <button
+                class="result-btn group bg-white/5 hover:bg-white/10 p-6 rounded-2xl border border-white/10 text-left flex flex-col gap-4"
+                onclick="updateResult(2)"
               >
-                <i data-lucide="battery-charging" class="w-6 h-6"></i>
-              </div>
-              <div>
-                <h4 class="font-bold text-white text-lg">Recuperação</h4>
-                <p class="text-sm text-behard-light/70">
-                  Respeito aos processos fisiológicos de descanso para prevenir
-                  lesões.
-                </p>
-              </div>
+                <div
+                  class="icon-box w-12 h-12 rounded-lg bg-white/10 text-white flex items-center justify-center transition-colors"
+                >
+                  <i data-lucide="focus" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h4
+                    class="text-lg font-bold text-white group-hover:text-behard-yellow transition-colors"
+                  >
+                    Precisão Técnica
+                  </h4>
+                  <p class="text-sm text-white/50">
+                    Execução e propósito claros.
+                  </p>
+                </div>
+              </button>
+
+              <!-- Btn 4 -->
+              <button
+                class="result-btn group bg-white/5 hover:bg-white/10 p-6 rounded-2xl border border-white/10 text-left flex flex-col gap-4"
+                onclick="updateResult(3)"
+              >
+                <div
+                  class="icon-box w-12 h-12 rounded-lg bg-white/10 text-white flex items-center justify-center transition-colors"
+                >
+                  <i data-lucide="battery-charging" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h4
+                    class="text-lg font-bold text-white group-hover:text-behard-yellow transition-colors"
+                  >
+                    Recuperação
+                  </h4>
+                  <p class="text-sm text-white/50">
+                    Respeito aos limites fisiológicos.
+                  </p>
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -2543,6 +2637,61 @@
             node.classList.add("active-node");
           });
         });
+
+        // RESULTS CONTROL LOGIC
+        const resultData = [
+          {
+            title: "Constância",
+            text: "Transforme o esforço esporádico em um hábito consistente. A chave não é a intensidade de um dia, mas a frequência de todos os dias.",
+            icon: "repeat",
+          },
+          {
+            title: "Gestão de Tempo",
+            text: "Planejamento adaptado à sua agenda. O treino se encaixa na sua vida, não o contrário. Reduza a fricção para começar.",
+            icon: "calendar-check",
+          },
+          {
+            title: "Precisão Técnica",
+            text: "Saiba exatamente o que fazer e como fazer. Clareza total sobre a execução evita lesões e maximiza resultados.",
+            icon: "focus",
+          },
+          {
+            title: "Recuperação",
+            text: "Treino gera estímulo, o descanso gera adaptação. Respeitamos seus limites fisiológicos para garantir longevidade.",
+            icon: "battery-charging",
+          },
+        ];
+
+        window.updateResult = function (index) {
+          const buttons = document.querySelectorAll(".result-btn");
+          const titleEl = document.getElementById("result-title");
+          const descEl = document.getElementById("result-desc");
+          const bgIconContainer = document.getElementById("result-bg-icon");
+          const contentContainer = document.getElementById("result-content");
+
+          buttons.forEach((btn, i) => {
+            if (i === index) btn.classList.add("active");
+            else btn.classList.remove("active");
+          });
+
+          if (contentContainer) {
+            contentContainer.classList.remove("fade-in");
+            contentContainer.classList.add("fade-out");
+
+            setTimeout(() => {
+              const data = resultData[index];
+              if (titleEl) titleEl.innerText = data.title;
+              if (descEl) descEl.innerText = data.text;
+              if (bgIconContainer)
+                bgIconContainer.innerHTML = `<i data-lucide="${data.icon}" class="w-64 h-64 text-white"></i>`;
+
+              if (window.lucide) lucide.createIcons();
+
+              contentContainer.classList.remove("fade-out");
+              contentContainer.classList.add("fade-in");
+            }, 400);
+          }
+        };
       });
     </script>
   </body>

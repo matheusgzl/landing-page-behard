@@ -409,6 +409,44 @@
       .gallery-item:hover .gallery-overlay {
         opacity: 1;
       }
+
+      /* Workout Demo Styles */
+      .set-btn {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .set-btn:active {
+        transform: scale(0.95);
+      }
+      .set-btn.completed {
+        background-color: #22c55e !important;
+        border-color: #22c55e !important;
+        color: white !important;
+      }
+
+      .rest-bar-container {
+        overflow: hidden;
+      }
+      .rest-bar {
+        width: 0%;
+        transition: width 0.1s linear;
+      }
+
+      /* Celebration Particles */
+      .particle {
+        position: absolute;
+        pointer-events: none;
+        animation: particle-fly 1s ease-out forwards;
+      }
+      @keyframes particle-fly {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--tx), var(--ty)) scale(0);
+          opacity: 0;
+        }
+      }
     </style>
     <script type="importmap">
       {
@@ -762,7 +800,7 @@
                     class="w-full h-40 mb-6 rounded-xl overflow-hidden relative bg-black/50 border border-white/5 flex-shrink-0"
                   >
                     <img
-                      src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=600&auto=format&fit=crop"
+                      src="imagens/equipe.png"
                       alt="Suporte"
                       class="w-full h-full object-cover opacity-80"
                     />
@@ -828,7 +866,7 @@
           </h3>
         </div>
 
-        <div class="flex whitespace-nowrap overflow-hidden">
+        <div class="flex whitespace-nowrap overflow-hidden hover-pause">
           <div class="animate-scroll flex gap-8 px-4">
             <!-- Card 1 -->
             <div
@@ -1190,6 +1228,34 @@
         </div>
       </section>
 
+      <!-- Purpose Banner Section (NEW) -->
+      <section
+        id="purpose-banner"
+        class="py-12 px-4 md:px-8 bg-black relative z-20"
+      >
+        <div class="container mx-auto max-w-6xl">
+          <div class="reveal relative group">
+            <!-- Glow Effect behind the image -->
+            <div
+              class="absolute -inset-1 bg-gradient-to-r from-behard-yellow/20 to-purple-600/20 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"
+            ></div>
+
+            <!-- The Image Container -->
+            <div
+              class="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+            >
+              <!-- Using a placeholder that resembles your image. PLEASE REPLACE WITH YOUR UPLOADED IMAGE URL -->
+              <img
+                src="imagens/ChatGPT Image 30 de jan. de 2026, 15_14_18.png"
+                alt="Propósito BeHard: Organizar Rotina, Respeitar Limites, Construir Bons Hábitos, Trazer Consistência"
+                class="w-full h-auto object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
+              />
+              <!-- INSTRUÇÃO: Substitua o 'src' acima pela URL da imagem que você enviou. Exemplo: src="./assets/minha-imagem.jpg" -->
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- DNA Section -->
       <section
         id="dna-section"
@@ -1221,11 +1287,11 @@
           >
             <!-- Info Panel (Order 1 on mobile) -->
             <div
-              class="order-1 md:order-2 w-full max-w-md min-h-[250px] relative"
+              class="order-1 md:order-2 w-full max-w-md min-h-[350px] relative"
             >
               <div
                 id="dna-info-card"
-                class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:border-behard-yellow/30 shadow-2xl"
+                class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 relative overflow-hidden transition-all duration-300 hover:border-behard-yellow/30 shadow-2xl h-full flex flex-col justify-center"
               >
                 <div
                   id="dna-content"
@@ -1749,7 +1815,8 @@
           </div>
 
           <div
-            class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 min-h-[450px] flex flex-col items-center justify-center relative overflow-hidden reveal shadow-2xl"
+            class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 min-h-[500px] flex flex-col items-center justify-center relative overflow-hidden reveal shadow-2xl"
+            id="simulator-card"
           >
             <div
               id="sim-step-1"
@@ -1958,22 +2025,189 @@
                   </div>
                 </div>
               </div>
-              <button
-                onclick="
-                  document
-                    .getElementById('motivation')
-                    .scrollIntoView({ behavior: 'smooth' })
-                "
-                class="ripple-btn px-10 py-4 rounded-full bg-behard-yellow text-behard-dark font-bold text-lg hover:bg-white hover:shadow-lg transition-all"
+              <div
+                class="flex flex-col md:flex-row gap-4 w-full justify-center"
               >
-                Iniciar este Protocolo
-              </button>
+                <button
+                  onclick="
+                    document
+                      .getElementById('motivation')
+                      .scrollIntoView({ behavior: 'smooth' })
+                  "
+                  class="ripple-btn px-8 py-4 rounded-full bg-behard-yellow text-behard-dark font-bold text-lg hover:bg-white hover:shadow-lg transition-all"
+                >
+                  Iniciar este Protocolo
+                </button>
+                <button
+                  onclick="startWorkoutDemo()"
+                  class="ripple-btn px-8 py-4 rounded-full border-2 border-white/20 text-white font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                >
+                  <i data-lucide="play-circle" class="w-5 h-5"></i> Testar App
+                </button>
+              </div>
               <button
                 onclick="resetSimulator()"
                 class="mt-6 text-white/50 hover:text-white text-sm"
               >
                 Refazer Análise
               </button>
+            </div>
+
+            <!-- New Demo Screen -->
+            <div
+              id="sim-demo"
+              class="absolute inset-0 bg-[#1A002E] z-50 flex flex-col hidden transition-opacity duration-300 opacity-0"
+            >
+              <!-- Header -->
+              <div
+                class="p-6 border-b border-white/10 flex justify-between items-center bg-black/20"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-full bg-behard-yellow text-behard-dark flex items-center justify-center font-bold"
+                  >
+                    <i data-lucide="activity" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <span
+                      class="text-xs text-behard-light/50 uppercase tracking-widest block"
+                      >Treino Beta</span
+                    >
+                    <span class="font-bold text-white block"
+                      >Hypertrophy A</span
+                    >
+                  </div>
+                </div>
+                <button
+                  onclick="closeDemo()"
+                  class="text-white/50 hover:text-white"
+                >
+                  <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+              </div>
+
+              <!-- Active Exercise -->
+              <div
+                class="flex-1 p-6 flex flex-col justify-center items-center relative"
+                id="demo-active-view"
+              >
+                <div class="w-full max-w-sm">
+                  <div class="mb-8 text-center">
+                    <h3 class="text-3xl font-bold text-white mb-2">
+                      Supino Inclinado
+                    </h3>
+                    <p class="text-behard-yellow text-lg font-medium">
+                      4 Séries • 8-12 Reps
+                    </p>
+                  </div>
+
+                  <!-- Interactive Sets -->
+                  <div class="space-y-3 mb-8">
+                    <div
+                      class="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10"
+                      id="set-row-1"
+                    >
+                      <span class="text-white/50 font-bold">1</span>
+                      <span class="text-white font-mono">20kg</span>
+                      <span class="text-white font-mono">12 reps</span>
+                      <button
+                        onclick="completeSet(1)"
+                        id="btn-set-1"
+                        class="set-btn w-10 h-10 rounded-full border-2 border-white/20 flex items-center justify-center text-transparent hover:border-behard-yellow hover:text-behard-yellow transition-all"
+                      >
+                        <i data-lucide="check" class="w-6 h-6"></i>
+                      </button>
+                    </div>
+                    <div
+                      class="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10 opacity-50"
+                      id="set-row-2"
+                    >
+                      <span class="text-white/50 font-bold">2</span>
+                      <span class="text-white font-mono">20kg</span>
+                      <span class="text-white font-mono">12 reps</span>
+                      <button
+                        onclick="completeSet(2)"
+                        id="btn-set-2"
+                        class="set-btn w-10 h-10 rounded-full border-2 border-white/20 flex items-center justify-center text-transparent hover:border-behard-yellow hover:text-behard-yellow transition-all pointer-events-none"
+                      >
+                        <i data-lucide="check" class="w-6 h-6"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Rest Timer Feedback -->
+                  <div
+                    id="rest-feedback"
+                    class="opacity-0 transition-opacity duration-300"
+                  >
+                    <div
+                      class="flex justify-between text-xs text-behard-yellow mb-1 font-bold uppercase tracking-widest"
+                    >
+                      <span>Descanso</span>
+                      <span id="rest-timer-display">00:05</span>
+                    </div>
+                    <div
+                      class="w-full h-2 bg-white/10 rounded-full rest-bar-container"
+                    >
+                      <div
+                        id="rest-bar"
+                        class="h-full bg-behard-yellow rounded-full rest-bar"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Completion View -->
+              <div
+                id="demo-complete-view"
+                class="absolute inset-0 bg-[#1A002E]/90 backdrop-blur-xl z-10 flex flex-col justify-center items-center text-center p-8 hidden opacity-0 transition-opacity duration-500"
+              >
+                <div
+                  class="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center text-white mb-6 animate-[bounce_1s_infinite] shadow-[0_0_50px_rgba(34,197,94,0.5)]"
+                >
+                  <i data-lucide="trophy" class="w-12 h-12"></i>
+                </div>
+                <h3 class="text-4xl font-bold text-white mb-2">
+                  Treino Finalizado!
+                </h3>
+                <p class="text-behard-light/70 text-lg mb-8">
+                  Você completou o demo com sucesso.
+                </p>
+
+                <div class="grid grid-cols-2 gap-4 w-full max-w-xs mb-8">
+                  <div
+                    class="bg-white/5 p-4 rounded-2xl border border-white/10"
+                  >
+                    <span class="block text-2xl font-bold text-white"
+                      >450<span class="text-sm text-behard-yellow"
+                        >kg</span
+                      ></span
+                    >
+                    <span class="text-xs text-white/50 uppercase">Volume</span>
+                  </div>
+                  <div
+                    class="bg-white/5 p-4 rounded-2xl border border-white/10"
+                  >
+                    <span class="block text-2xl font-bold text-white"
+                      >100<span class="text-sm text-green-500">%</span></span
+                    >
+                    <span class="text-xs text-white/50 uppercase">Foco</span>
+                  </div>
+                </div>
+
+                <button
+                  onclick="
+                    document
+                      .getElementById('motivation')
+                      .scrollIntoView({ behavior: 'smooth' });
+                    closeDemo();
+                  "
+                  class="w-full max-w-xs py-4 rounded-full bg-behard-yellow text-behard-dark font-bold text-lg hover:bg-white hover:shadow-xl transition-all shadow-lg transform hover:-translate-y-1"
+                >
+                  Quero treinar assim
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2126,7 +2360,7 @@
             </div>
             <div class="gallery-item group">
               <img
-                src="imagens/filip-mroz-XCkRGOX2VgM-unsplash.jpg"
+                src="https://images.unsplash.com/photo-1517963879466-e5027c91d9b3?q=80&w=400&auto=format&fit=crop"
                 alt="Corrida"
               />
               <div class="gallery-overlay">
@@ -2171,6 +2405,15 @@
               />
               <div class="gallery-overlay">
                 <span class="text-white font-bold text-sm">Mindset & Foco</span>
+              </div>
+            </div>
+            <div class="gallery-item group">
+              <img
+                src="https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=400&auto=format&fit=crop"
+                alt="Equilíbrio"
+              />
+              <div class="gallery-overlay">
+                <span class="text-white font-bold text-sm">Equilíbrio</span>
               </div>
             </div>
           </div>
@@ -2600,6 +2843,148 @@
           userSelections.time = "";
         };
 
+        // WORKOUT DEMO LOGIC
+        window.startWorkoutDemo = function () {
+          const demo = document.getElementById("sim-demo");
+          if (!demo) return;
+          demo.classList.remove("hidden");
+          void demo.offsetWidth; // Force Reflow
+          demo.classList.remove("opacity-0");
+          resetDemoState();
+        };
+
+        window.closeDemo = function () {
+          const demo = document.getElementById("sim-demo");
+          if (!demo) return;
+          demo.classList.add("opacity-0");
+          setTimeout(() => demo.classList.add("hidden"), 300);
+        };
+
+        window.resetDemoState = function () {
+          document.querySelectorAll(".set-btn").forEach((btn) => {
+            btn.classList.remove("completed");
+            btn.innerHTML = '<i data-lucide="check" class="w-6 h-6"></i>';
+          });
+          const row2 = document.getElementById("set-row-2");
+          const btn2 = document.getElementById("btn-set-2");
+          if (row2) row2.classList.add("opacity-50");
+          if (btn2) btn2.classList.add("pointer-events-none");
+
+          document.getElementById("rest-feedback").classList.add("opacity-0");
+          document.getElementById("rest-bar").style.width = "0%";
+
+          const completeView = document.getElementById("demo-complete-view");
+          completeView.classList.add("hidden", "opacity-0");
+
+          if (window.lucide) lucide.createIcons();
+        };
+
+        window.completeSet = function (setNum) {
+          const btn = document.getElementById(`btn-set-${setNum}`);
+          if (!btn) return;
+
+          btn.classList.add("completed");
+          createParticles(btn);
+
+          if (setNum === 1) {
+            const feedback = document.getElementById("rest-feedback");
+            const bar = document.getElementById("rest-bar");
+
+            feedback.classList.remove("opacity-0");
+
+            let width = 0;
+            const interval = setInterval(() => {
+              width += 2;
+              if (bar) bar.style.width = width + "%";
+              if (width >= 100) {
+                clearInterval(interval);
+                const row2 = document.getElementById("set-row-2");
+                const btn2 = document.getElementById("btn-set-2");
+                if (row2) row2.classList.remove("opacity-50");
+                if (btn2) btn2.classList.remove("pointer-events-none");
+                feedback.classList.add("opacity-0");
+                setTimeout(() => {
+                  if (bar) bar.style.width = "0%";
+                }, 300);
+              }
+            }, 30);
+          } else if (setNum === 2) {
+            setTimeout(() => {
+              showCompletion();
+            }, 500);
+          }
+        };
+
+        window.createParticles = function (element) {
+          const rect = element.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+
+          for (let i = 0; i < 12; i++) {
+            const p = document.createElement("div");
+            p.classList.add("particle");
+            p.style.left = centerX + "px";
+            p.style.top = centerY + "px";
+            p.style.width = Math.random() * 6 + 4 + "px";
+            p.style.height = p.style.width;
+            p.style.backgroundColor = ["#F2B705", "#22C55E", "#FFFFFF"][
+              Math.floor(Math.random() * 3)
+            ];
+            p.style.borderRadius = "50%";
+            p.style.position = "fixed";
+            p.style.zIndex = "100";
+
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 100 + 50;
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+
+            p.style.setProperty("--tx", `${tx}px`);
+            p.style.setProperty("--ty", `${ty}px`);
+
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1000);
+          }
+        };
+
+        window.showCompletion = function () {
+          const view = document.getElementById("demo-complete-view");
+          view.classList.remove("hidden");
+          void view.offsetWidth;
+          view.classList.remove("opacity-0");
+          triggerConfetti();
+        };
+
+        window.triggerConfetti = function () {
+          const colors = ["#F2B705", "#22C55E", "#9333EA", "#FFFFFF"];
+          const container = document.getElementById("demo-complete-view");
+
+          for (let i = 0; i < 50; i++) {
+            const c = document.createElement("div");
+            c.style.position = "absolute";
+            c.style.width = "8px";
+            c.style.height = "8px";
+            c.style.backgroundColor =
+              colors[Math.floor(Math.random() * colors.length)];
+            c.style.left = Math.random() * 100 + "%";
+            c.style.top = -10 + "px";
+            c.style.opacity = Math.random();
+            c.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+            const duration = Math.random() * 2 + 1;
+            c.style.transition = `top ${duration}s linear, opacity ${duration}s ease-in`;
+
+            container.appendChild(c);
+
+            setTimeout(() => {
+              c.style.top = "110%";
+              c.style.opacity = "0";
+            }, 100);
+
+            setTimeout(() => c.remove(), duration * 1000);
+          }
+        };
+
         // Flip Cards
         document.querySelectorAll(".flip-trigger").forEach((trigger) => {
           trigger.addEventListener("click", (e) => {
@@ -2627,21 +3012,29 @@
             title: "O Ruído",
             text: "O excesso de informação gera paralisia.",
             icon: "cloud-fog",
+            image:
+              "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=400&auto=format&fit=crop",
           },
           diagnosis: {
             title: "O Diagnóstico",
             text: "Motivação sem método é falha garantida.",
             icon: "microscope",
+            image:
+              "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=400&auto=format&fit=crop",
           },
           purpose: {
             title: "O Propósito",
             text: "Democratizar a alta performance.",
             icon: "target",
+            image:
+              "imagens/proposito.png",
           },
           solution: {
             title: "A Solução",
             text: "Um ecossistema de hábitos.",
             icon: "zap",
+            image:
+              "imagens/ideia 3.jpg",
           },
         };
         const dnaContent = document.getElementById("dna-content");
@@ -2651,7 +3044,7 @@
           dnaContent.classList.remove("fade-in");
           dnaContent.classList.add("fade-out");
           setTimeout(() => {
-            dnaContent.innerHTML = `<div class="flex items-center gap-3 mb-4"><div class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow"><i data-lucide="${data.icon}" class="w-6 h-6"></i></div><span class="text-xs font-bold uppercase tracking-widest text-white/50">Conceito Ativado</span></div><h3 class="text-2xl font-bold text-white mb-3">${data.title}</h3><p class="text-behard-light/80 leading-relaxed">${data.text}</p>`;
+            dnaContent.innerHTML = `<img src="${data.image}" class="w-full h-32 object-cover rounded-xl mb-4 border border-white/10" alt="${data.title}"><div class="flex items-center gap-3 mb-4"><div class="bg-behard-yellow/20 p-2 rounded-lg text-behard-yellow"><i data-lucide="${data.icon}" class="w-6 h-6"></i></div><span class="text-xs font-bold uppercase tracking-widest text-white/50">Conceito Ativado</span></div><h3 class="text-2xl font-bold text-white mb-3">${data.title}</h3><p class="text-behard-light/80 leading-relaxed">${data.text}</p>`;
             if (window.lucide) lucide.createIcons();
             dnaContent.classList.remove("fade-out");
             dnaContent.classList.add("fade-in");
@@ -2814,7 +3207,7 @@
             autoPlayTimer = setInterval(() => {
               currentIndex = (currentIndex + 1) % nodeGroups.length;
               highlightNode(currentIndex);
-            }, 2000); // 2 seconds
+            }, 5000); // Changed to 5 seconds
           }
 
           function stopAutoPlay() {
